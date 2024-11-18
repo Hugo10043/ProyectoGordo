@@ -112,11 +112,11 @@ function listarSocioPorId($conexionBD, $id)
             $nombre = $socio['nombre'];
             $edad = $socio['edad'];
             $usuario = $socio['usuario'];
+            $contraseña = $socio['password'];
             $telefono = $socio['telefono'];
             $foto = $socio['foto'];
         }
 
-        // Mostrar el formulario con los datos del socio
         echo '
         <div class="container my-5">
             <h2 class="text-center mb-4">Modificar Socio</h2>
@@ -135,7 +135,8 @@ function listarSocioPorId($conexionBD, $id)
                 </div>
                 <div class="mb-3">
                     <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="contraseña" name="contraseña">
+                    <input type="text" class="form-control" id="contraseña" name="contraseña" value="' . $contraseña . '" required>
+                    
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Teléfono</label>
@@ -147,6 +148,7 @@ function listarSocioPorId($conexionBD, $id)
                 </div>
                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </form>
+            <a href="socios.php" class="btn btn-secondary mt-3">Volver</a>
         </div>';
     } else {
         echo '<div class="container my-5"><div class="alert alert-danger">Socio no encontrado.</div></div>';
