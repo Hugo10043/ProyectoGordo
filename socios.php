@@ -54,7 +54,8 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <!-- Listado de socios -->
         <section>
             <?php
-
+            
+            //Si no se manda nada por formulario salen todos los socios. Asi al iniciar la pagina salen todos.
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 listarSocios($conexion);
             }

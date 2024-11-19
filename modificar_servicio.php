@@ -5,20 +5,17 @@ require_once "programa/conectar.php";
 
 $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 
-// Obtener el ID del socio
-$idSocio = $_GET["id"];
+// Obtener el ID del servicio
+$idServicio = $_GET["id"];
 
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nombre = $_POST["nombre"];
-    $edad = $_POST["edad"];
-    $usuario = $_POST["usuario"];
-    $contraseña = $_POST["contraseña"];
-    $telefono = $_POST["telefono"];
-    $foto = $_POST["foto"];
+    $descripcion = $_POST["descripcion"];
+    $duracion = $_POST["duracion"];
+    $precio = $_POST["precio"];
 
-    modificarSocio($conexion, $idSocio, $nombre, $edad, $usuario, $contraseña, $telefono, $foto);
+    modificarServicio($conexion, $idServicio, $descripcion, $duracion, $precio);
 }
 
 ?>
@@ -29,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modificar Socio</title>
+    <title>Modificar Servicio</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="estilos.css">
@@ -41,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ?>
 
     <?php
-    listarSocioPorId($conexion,$idSocio);
+    listarServicioPorId($conexion,$idServicio);
     ?>
 
     <?php

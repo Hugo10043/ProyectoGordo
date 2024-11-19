@@ -9,13 +9,14 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
 
     $consulta->bind_param("sissss", $nombreSocio, $edad, $usuario, $contraseña, $telefono, $foto);
 
-    $consulta->execute();
+    try {
+        $consulta->execute();
 
-    if ($consulta->affected_rows > 0) {
-        echo '<div class="container my-5">';
-        echo '<div class="row gy-4">';
-        echo '<h4>Socio Insertado</h4>';
-        echo '
+        if ($consulta->affected_rows > 0) {
+            echo '<div class="container my-5">';
+            echo '<div class="row gy-4">';
+            echo '<h4>Socio Insertado</h4>';
+            echo '
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="row g-0">
@@ -37,11 +38,15 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
                     </div>
                 </div>
             </div>';
-        echo '</div>';
-        echo '</div>';
-    } else {
-        echo "No se ha insertado el nuevo socio. Posiblemente ya existiera.";
+            echo '</div>';
+            echo '</div>';
+        }
+        //Para controlar la excepcion de clave duplicada
+    } catch (mysqli_sql_exception $e) {
+        echo '<div class="container my-5"><div class="alert alert-danger">Error: El usuario "' . $usuario . '" ya existe.</div></div>';
+
     }
+
 }
 
 function listarSocios($conexionBD)
@@ -107,14 +112,14 @@ function listarSocioPorId($conexionBD, $id)
     $resultado = $consulta->get_result();
 
     if ($resultado->num_rows > 0) {
-        // Recuperar los datos del socio
+
         while ($socio = $resultado->fetch_assoc()) {
-            $nombre = $socio['nombre'];
-            $edad = $socio['edad'];
-            $usuario = $socio['usuario'];
-            $contraseña = $socio['password'];
-            $telefono = $socio['telefono'];
-            $foto = $socio['foto'];
+            $nombre = $socio["nombre"];
+            $edad = $socio["edad"];
+            $usuario = $socio["usuario"];
+            $contraseña = $socio["password"];
+            $telefono = $socio["telefono"];
+            $foto = $socio["foto"];
         }
 
         echo '
@@ -254,11 +259,10 @@ function listarSociosPorTelefono($conexionBD, $telefonoSocio)
             $nombre = $fila["nombre"];
             $edad = $fila["edad"];
             $usuario = $fila["usuario"];
-            $contraseña=$fila["password"];
+            $contraseña = $fila["password"];
             $telefono = $fila["telefono"];
             $foto = $fila["foto"];
 
-            // Mostrar cada socio en una tarjeta
             echo '
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -307,7 +311,7 @@ function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contra
 
     if ($consulta->affected_rows > 0) {
         echo "Se ha modificado el socio con ID $idSocio. Redirigiendo...";
-        header("Refresh:2; url=socios.php");
+        header("Refresh:3; url=socios.php");
     } else {
         echo "No se ha modificado el socio. Puede que el ID no exista o los datos sean los mismos.";
     }
@@ -321,22 +325,48 @@ function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contra
 
 function insertarNuevoServicio($conexionBD, $descripcion, $duracion, $precio)
 {
-
     $nombreServicio = strtolower($descripcion);
+
 
     $sentencia = "INSERT INTO servicio (descripcion, duracion, precio) VALUES (?, ?, ?)";
     $consulta = $conexionBD->prepare($sentencia);
-
     $consulta->bind_param("sii", $nombreServicio, $duracion, $precio);
 
-    $consulta->execute();
+    try {
+        $consulta->execute();
 
-    if ($consulta->affected_rows > 0) {
-        echo "Se ha insertado el nuevo servicio";
-    } else {
-        echo "No se ha insertado el nuevo servicio. Posiblemente ya existiera.";
+        if ($consulta->affected_rows > 0) {
+
+
+            echo '
+            <div class="container my-5">
+                <h2 class="text-center mb-4">Servicio Insertado</h2>
+                <div class="accordion" id="accordionServicioInsertado">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingNuevo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNuevo" aria-expanded="false" aria-controls="collapseNuevo">
+                                Servicio #' . $descripcion . '
+                            </button>
+                        </h2>
+                        <div id="collapseNuevo" class="accordion-collapse collapse" aria-labelledby="headingNuevo" data-bs-parent="#accordionServicioInsertado">
+                            <div class="accordion-body">
+                                <p><strong>Descripción:</strong> ' . $descripcion . '</p>
+                                <p><strong>Duración:</strong> ' . $duracion . ' minutos</p>
+                                <p><strong>Precio:</strong> $' . $precio . '</p>
+                                <div class="text-end">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+        }
+    } catch (mysqli_sql_exception $e) {
+        echo '<div class="container my-5"><div class="alert alert-danger">Error: El servicio "' . $descripcion . '" ya existe.</div></div>';
+
     }
 }
+
 
 function modificarServicio($conexionBD, $idServicio, $descripcion, $duracion, $precio)
 {
@@ -354,11 +384,53 @@ function modificarServicio($conexionBD, $idServicio, $descripcion, $duracion, $p
     $consulta->execute();
 
     if ($consulta->affected_rows > 0) {
-        echo "Se ha modificado el servicio con ID $idServicio";
+        echo "Se ha modificado el servicio con ID $idServicio. Redirigiendo...";
+        header("Refresh:3; url=servicios.php");
     } else {
         echo "No se ha modificado el servicio. Puede que el ID no exista o los datos sean los mismos.";
     }
 
+}
+
+function listarServicioPorId($conexionBD, $id)
+{
+    $sentencia = "SELECT * FROM servicio WHERE id = ?";
+    $consulta = $conexionBD->prepare($sentencia);
+    $consulta->bind_param("i", $id);
+    $consulta->execute();
+    $resultado = $consulta->get_result();
+
+    if ($resultado->num_rows > 0) {
+
+        while ($servicio = $resultado->fetch_assoc()) {
+            $descripcion = $servicio["descripcion"];
+            $duracion = $servicio["duracion"];
+            $precio = $servicio["precio"];
+        }
+
+        echo '
+        <div class="container my-5">
+            <h2 class="text-center mb-4">Modificar Servicio</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" value="' . $descripcion . '" required>
+                </div>
+                <div class="mb-3">
+                    <label for="duracion" class="form-label">Duracion</label>
+                    <input type="number" class="form-control" id="duracion" name="duracion" value="' . $duracion . '" required>
+                </div>
+                <div class="mb-3">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" class="form-control" id="precio" name="precio" value="' . $precio . '" required>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            </form>
+            <a href="socios.php" class="btn btn-secondary mt-3">Volver</a>
+        </div>';
+    } else {
+        echo '<div class="container my-5"><div class="alert alert-danger">Servicio no encontrado.</div></div>';
+    }
 }
 
 function listarServiciosPorNombre($conexionBD, $nombreServicio)
@@ -374,34 +446,96 @@ function listarServiciosPorNombre($conexionBD, $nombreServicio)
     $cadena = strtolower($nombreServicio);
 
     $consulta->bind_param("s", $cadena);
-
-    $consulta->bind_result($id, $descripcion, $duracion, $precio);
     $consulta->execute();
+    $resultado = $consulta->get_result();
 
-    while ($consulta->fetch()) {
-        echo "<p>$id,$descripcion,$duracion,$precio</p>";
+
+    echo '<div class="container my-5">';
+    echo '<div class="accordion" id="accordionServiciosFiltrados">';
+
+    $contador = 1;
+
+
+    while ($fila = $resultado->fetch_assoc()) {
+        $id = $fila["id"];
+        $descripcion = $fila["descripcion"];
+        $duracion = $fila["duracion"];
+        $precio = $fila["precio"];
+
+
+        echo '
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading' . $contador . '">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' . $contador . '" aria-expanded="false" aria-controls="collapse' . $contador . '">
+                    Servicio #' . $id . ' - ' . $descripcion . '
+                </button>
+            </h2>
+            <div id="collapse' . $contador . '" class="accordion-collapse collapse" aria-labelledby="heading' . $contador . '" data-bs-parent="#accordionServiciosFiltrados">
+                <div class="accordion-body">
+                    <p><strong>Descripción:</strong> ' . $descripcion . '</p>
+                    <p><strong>Duración:</strong> ' . $duracion . 'm minutos</p>
+                    <p><strong>Precio:</strong> ' . $precio . '€</p>
+                    <div class="text-end">
+                        <p><a href="modificar_servicio.php?id=' . $id . '" class="btn btn-warning">Modificar</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>';
+        $contador++;
     }
 
+    if ($contador === 1) {
+
+        echo '<div class="alert alert-warning">No se encontraron servicios con el nombre especificado.</div>';
+    }
+
+    echo '</div>';
+    echo '</div>';
 }
+
 
 function listarServicios($conexionBD)
 {
-
     $consulta = "SELECT * FROM servicio ORDER BY precio";
     $resultado = $conexionBD->query($consulta);
 
-    echo "<table border=1px>";
-    echo "<tr><th>ID</th><th>DESCRIPCION</th><th>DURACION</th><th>PRECIO</th></tr>";
+
+    echo '<div class="container my-5">';
+    echo '<div class="accordion" id="accordionServicios">';
+
+    $contador = 1;
+
     while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
         $id = $fila["id"];
         $descripcion = $fila["descripcion"];
         $duracion = $fila["duracion"];
         $precio = $fila["precio"];
-        echo "<tr><td>$id</td><td>$descripcion</td><td>$duracion</td><td>$precio</td></tr>";
-    }
-    echo "</table>";
 
+        echo '
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading' . $contador . '">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' . $contador . '" aria-expanded="false" aria-controls="collapse' . $contador . '">
+                    Servicio #' . $id . ' - ' . $descripcion . '
+                </button>
+            </h2>
+            <div id="collapse' . $contador . '" class="accordion-collapse collapse" aria-labelledby="heading' . $contador . '" data-bs-parent="#accordionServicios">
+                <div class="accordion-body">
+                    <p><strong>Descripción:</strong> ' . $descripcion . '</p>
+                    <p><strong>Duración:</strong> ' . $duracion . 'm</p>
+                    <p><strong>Precio:</strong> ' . $precio . '€</p>
+                    <div class="text-end">
+                        <a href="modificar_servicio.php?id=' . $id . '" class="btn btn-warning">Modificar</a>
+                    </div>
+                </div>
+            </div>
+        </div>';
+        $contador++;
+    }
+
+    echo '</div>';
+    echo '</div>';
 }
+
 ?>
 
 
@@ -429,19 +563,18 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
 function listarTestimonios($conexionBD)
 {
 
-    $consulta = "SELECT * FROM testimonio";
+    $consulta = "SELECT * FROM testimonio ORDER BY fecha";
     $resultado = $conexionBD->query($consulta);
 
-    echo "<table border=1px>";
-    echo "<tr><th>ID</th><th>AUTOR</th><th>CONTENIDO</th><th>FECHA</th></tr>";
+
     while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
         $id = $fila["id"];
         $autor = $fila["autor"];
         $contenido = $fila["contenido"];
         $fecha = $fila["fecha"];
-        echo "<tr><td>$id</td><td>$autor</td><td>$contenido</td><td>$fecha</td></tr>";
+        echo "$id$autor$contenido$fecha";
     }
-    echo "</table>";
+
 
 }
 
@@ -804,7 +937,6 @@ function listarCitasPorFecha($conexionBD, $date)
 ?>
 
 
-<!-- CREAR NAV -->
 <?php
 
 function nav()
@@ -828,7 +960,7 @@ function nav()
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="socios.php">Socios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Servicios</a>
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="servicios.php">Servicios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Noticias</a>
