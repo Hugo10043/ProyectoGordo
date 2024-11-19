@@ -223,7 +223,7 @@ function listarSociosPorNombre($conexionBD, $nombreSocio)
         echo '</div>';
         echo '</div>';
     } else {
-        echo '<p class="text-center text-muted">No se encontraron socios con ese nombre.</p>';
+        echo '<div class="alert alert-warning">No se encontraron socios con ese nombre.</div>';
     }
 
 }
@@ -289,7 +289,7 @@ function listarSociosPorTelefono($conexionBD, $telefonoSocio)
         echo '</div>';
         echo '</div>';
     } else {
-        echo '<p class="text-center text-muted">No se encontraron socios con ese telefono.</p>';
+        echo '<div class="alert alert-warning">No se encontraron socios con ese telefono.</div>';
     }
 
 }
@@ -312,6 +312,7 @@ function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contra
     if ($consulta->affected_rows > 0) {
         echo "Se ha modificado el socio con ID $idSocio. Redirigiendo...";
         header("Refresh:3; url=socios.php");
+        
     } else {
         echo "No se ha modificado el socio. Puede que el ID no exista o los datos sean los mismos.";
     }
@@ -386,6 +387,7 @@ function modificarServicio($conexionBD, $idServicio, $descripcion, $duracion, $p
     if ($consulta->affected_rows > 0) {
         echo "Se ha modificado el servicio con ID $idServicio. Redirigiendo...";
         header("Refresh:3; url=servicios.php");
+        
     } else {
         echo "No se ha modificado el servicio. Puede que el ID no exista o los datos sean los mismos.";
     }
@@ -426,7 +428,7 @@ function listarServicioPorId($conexionBD, $id)
                 </div>
                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </form>
-            <a href="socios.php" class="btn btn-secondary mt-3">Volver</a>
+            <a href="servicios.php" class="btn btn-secondary mt-3">Volver</a>
         </div>';
     } else {
         echo '<div class="container my-5"><div class="alert alert-danger">Servicio no encontrado.</div></div>';
@@ -455,6 +457,7 @@ function listarServiciosPorNombre($conexionBD, $nombreServicio)
 
     $contador = 1;
 
+    echo '<h4>Listado por Nombre de Servicios</h4>';
 
     while ($fila = $resultado->fetch_assoc()) {
         $id = $fila["id"];
@@ -502,6 +505,7 @@ function listarServicios($conexionBD)
 
     echo '<div class="container my-5">';
     echo '<div class="accordion" id="accordionServicios">';
+    echo '<h4>Listado Completo de Servicios</h4>';
 
     $contador = 1;
 
@@ -544,27 +548,65 @@ function listarServicios($conexionBD)
 
 function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
 {
-
-
     $sentencia = "INSERT INTO testimonio (autor, contenido, fecha) VALUES (?, ?, ?)";
     $consulta = $conexionBD->prepare($sentencia);
 
     $consulta->bind_param("sss", $autor, $contenido, $fecha);
 
-    $consulta->execute();
+    try {
+        $consulta->execute();
 
-    if ($consulta->affected_rows > 0) {
-        echo "Se ha insertado el nuevo testimonio";
-    } else {
-        echo "No se ha insertado el nuevo testimonio.";
+        if ($consulta->affected_rows > 0) {
+            
+            
+            
+            echo '<div class="container my-5">';
+            echo '<div class="row gy-4">';
+            echo '<h4>Testimonio Insertado</h4>';
+            echo '
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="row g-0">
+                    
+
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">' . $autor . '</h5>
+                                <p class="card-text">
+                                    <strong>Fecha:</strong> ' . $fecha . '<br>
+                                    <strong>Testimonio:</strong> ' . $contenido . '
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+            echo '<section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+            </form>
+        </section>';
+            echo '</div>';
+            echo '</div>';
+        }
+    } catch (mysqli_sql_exception $e) {
+
+        echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto</div></div>';
     }
 }
 
+
 function listarTestimonios($conexionBD)
 {
-
     $consulta = "SELECT * FROM testimonio ORDER BY fecha";
     $resultado = $conexionBD->query($consulta);
+
+    // Contenedor del acordeón
+    echo '<div class="container my-5">';
+    echo '<div class="accordion accordion-flush" id="accordionTestimonios">';
+    echo '<h4>Listado de Testimonios</h4>';
+
+    $contador = 1;
 
 
     while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
@@ -572,26 +614,47 @@ function listarTestimonios($conexionBD)
         $autor = $fila["autor"];
         $contenido = $fila["contenido"];
         $fecha = $fila["fecha"];
-        echo "$id$autor$contenido$fecha";
+
+        echo '
+    <div class="accordion-item">
+    <h2 class="accordion-header" id="heading' . $contador . '">
+        <button class="accordion-button collapsed bg-primary-light fw-bold fs-5 p-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse' . $contador . '" aria-expanded="false" aria-controls="collapse' . $contador . '">
+    <i class="bi bi-person-circle"></i>Testimonio de ' . $autor . ' - ' . $fecha . '
+</button>
+    </h2>
+
+    <div id="collapse' . $contador . '" class="accordion-collapse collapse" aria-labelledby="heading' . $contador . '" data-bs-parent="#accordionTestimonios">
+        <div class="accordion-body bg-light">
+            <div class="container">
+                <p><strong>Testimonio:</strong> ' . $contenido . '</p>
+                <p class="card-text"><small class="text-muted">ID: ' .$id . '</small></p>
+            </div>
+        </div>
+    </div>
+</div>';
+
+        $contador++;
     }
 
-
+    echo '</div>';
+    echo '</div>';
 }
+
 
 function listarTestimonioAleatorio($conexionBD)
 {
-    // Consulta para seleccionar un testimonio aleatorio
+
     $consulta = "SELECT * FROM testimonio ORDER BY RAND() LIMIT 1";
     $resultado = $conexionBD->query($consulta);
 
     if ($resultado->num_rows > 0) {
-        // Obtener el testimonio
+
         $fila = $resultado->fetch_array(MYSQLI_ASSOC);
         $autor = $fila["autor"];
         $contenido = $fila["contenido"];
         $fecha = $fila["fecha"];
 
-        // Mostrar el testimonio en un diseño tipo tarjeta pero diferente al de noticias
+
         echo '
         <div class="testimonial-card mb-4 p-4 shadow-lg rounded" style="background-color: #e9ecef; border-left: 6px solid #28a745;">
             <div class="d-flex align-items-center mb-3">
@@ -683,38 +746,40 @@ function listarNoticias($conexionBD, $numero)
 
 function listarUltimasNoticias($conexionBD)
 {
-    // Consulta para obtener las 3 últimas noticias
+
     $consulta = "SELECT * FROM noticia ORDER BY fecha DESC LIMIT 3";
     $resultado = $conexionBD->query($consulta);
 
-    // Variable para alternar las posiciones
-    $count = 0;
 
-    // Iterar sobre cada noticia
+    $contador = 0;
+
+
     while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
         $id = $fila["id"];
         $titulo = $fila["titulo"];
         $contenido = $fila["contenido"];
-        $imagen = $fila["imagen"]; // Ruta de la imagen
+        $imagen = $fila["imagen"]; 
         $fecha = $fila["fecha"];
 
         // Extraer las primeras tres palabras del contenido
-        $contenido_array = explode(' ', $contenido); // Divide el contenido en palabras
-        $contenido_resumido = implode(' ', array_slice($contenido_array, 0, 3)); // Toma las primeras 3 palabras
+        $contenido_array = explode(' ', $contenido); 
+
+        // Divide el contenido en palabras y coge las 3 primeras
+        $contenido_resumido = implode(' ', array_slice($contenido_array, 0, 3)); 
 
         // Alternancia entre la izquierda y la derecha
-        if ($count % 2 == 0) {
-            $alignmentClass = 'col-md-6 mb-4'; // Izquierda (columna de la mitad izquierda)
+        if ($contador % 2 == 0) {
+            $alineacion = 'col-md-6 mb-4'; // Izquierda
         } else {
-            $alignmentClass = 'col-md-6 mb-4 ms-auto'; // Derecha (columna de la mitad derecha)
+            $alineacion = 'col-md-6 mb-4 ms-auto'; // Derecha
         }
 
-        // Comienzo de la fila que contendrá la noticia
+
         echo '<div class="row">';
 
-        // Mostrar cada noticia en una tarjeta de Bootstrap
+
         echo '
-        <div class="' . $alignmentClass . '">
+        <div class="' . $alineacion . '">
             <div class="card">
                 <img src="' . $imagen . '" class="card-img-top" alt="' . $titulo . '" style="width: 100%; height: auto; max-height: 200px;">
                 <div class="card-body">
@@ -728,11 +793,11 @@ function listarUltimasNoticias($conexionBD)
             </div>
         </div>';
 
-        // Cierre de la fila
+
         echo '</div>';
 
-        // Incrementar el contador
-        $count++;
+
+        $contador++;
     }
 }
 
@@ -941,9 +1006,9 @@ function listarCitasPorFecha($conexionBD, $date)
 
 function nav()
 {
-    echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="imagenes/icono.png" alt="Logo" class="logo me-2">
                 <span class="fw-bold">KaliMuscle</span>
             </a>
@@ -963,10 +1028,13 @@ function nav()
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="servicios.php">Servicios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Noticias</a>
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="testimonios.php">Testimonios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Testimonios</a>
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
+                    </li>
+                    <li class="nav-item mb-2 mb-md-2">
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Noticias</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Contacto</a>
@@ -976,6 +1044,7 @@ function nav()
         </div>
     </nav>';
 }
+
 
 function footer()
 {

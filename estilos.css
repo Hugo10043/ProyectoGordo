@@ -37,3 +37,12 @@
     height: 150px;
     object-fit: cover;
 }
+
+.accordion-button.bg-primary-light {
+    background-color: #6fa3f7 !important;
+    color: white;
+}
+
+.alert{
+    width: fit-content;
+}

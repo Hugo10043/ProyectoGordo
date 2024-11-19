@@ -15,6 +15,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
     <title>Socios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <link rel="stylesheet" href="estilos.css">
 </head>
 
@@ -45,16 +46,10 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             </form>
         </section>
 
-        <section class="mb-5">
-            <form method="POST">
-                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Socios</button>
-            </form>
-        </section>
-
         <!-- Listado de socios -->
         <section>
             <?php
-            
+
             //Si no se manda nada por formulario salen todos los socios. Asi al iniciar la pagina salen todos.
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 listarSocios($conexion);
@@ -65,17 +60,24 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 $nombreBuscado = $_POST['nombre'];
                 $telefonoBuscado = $_POST['telefono'];
 
+                echo '<section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+            </form>
+        </section>';
+
                 if (!empty($nombreBuscado)) {
 
                     listarSociosPorNombre($conexion, $nombreBuscado);
+
                 }
 
                 if (!empty($telefonoBuscado)) {
 
                     listarSociosPorTelefono($conexion, $telefonoBuscado);
-                }else {
+                } else {
 
-                    echo '<p class="text-center text-muted">Ingresa un nombre o telefono.</p>';
+                   echo '<div class="alert alert-warning">Escribe un nombre o telefono.</div>';
                 }
             }
 

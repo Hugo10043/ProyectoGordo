@@ -15,6 +15,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
     <title>Servicios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <link rel="stylesheet" href="estilos.css">
 </head>
 
@@ -40,41 +41,42 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             </form>
         </section>
 
-        <section class="mb-5">
-            <form method="POST">
-                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
-            </form>
-        </section>
 
         <!-- Listado de servicios -->
         <section>
             <?php
 
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($_SERVER["REQUEST_METHOD"] !== "POST") {
                 listarServicios($conexion);
             }
 
-            if (isset($_POST['buscar'])) {
+            if (isset($_POST["buscar"])) {
 
-                $nombreBuscado = $_POST['nombre'];
+                $nombreBuscado = $_POST["nombre"];
+
+                echo '<section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+            </form>
+        </section>';
 
                 if (!empty($nombreBuscado)) {
 
                     listarServiciosPorNombre($conexion, $nombreBuscado);
                 } else {
 
-                    echo '<p class="text-center text-muted">Ingresa un nombre.</p>';
+                    echo '<div class="alert alert-warning">Escribe un nombre.</div>';
                 }
             }
 
-            if (isset($_POST['mostrar_todos'])) {
+            if (isset($_POST["mostrar_todos"])) {
                 listarServicios($conexion);
             }
 
-            if (isset($_POST['insertar'])) {
-                $descripcion = $_POST['descripcion'];
-                $duracion = $_POST['duracion'];
-                $precio = $_POST['precio'];
+            if (isset($_POST["insertar"])) {
+                $descripcion = $_POST["descripcion"];
+                $duracion = $_POST["duracion"];
+                $precio = $_POST["precio"];
                 insertarNuevoServicio($conexion, $descripcion, $duracion, $precio);
             }
             ?>
