@@ -1,3 +1,19 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.container {
+    flex: 1;
+}
+
 .nav-item {
     transition: transform 0.3s ease, background-color 0.3s ease;
 }

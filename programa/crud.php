@@ -557,19 +557,17 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
         $consulta->execute();
 
         if ($consulta->affected_rows > 0) {
-            
-            
-            
             echo '<div class="container my-5">';
             echo '<div class="row gy-4">';
-            echo '<h4>Testimonio Insertado</h4>';
+            echo '<h4 class="col-12 text-center mb-4">Testimonio Insertado</h4>';
+
+            
             echo '
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="row g-0">
-                    
 
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title">' . $autor . '</h5>
                                 <p class="card-text">
@@ -581,19 +579,25 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
                     </div>
                 </div>
             </div>';
-            echo '<section class="mb-5">
-            <form method="POST">
-                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
-            </form>
-        </section>';
-            echo '</div>';
-            echo '</div>';
+
+            
+            echo '
+            <div class="col-12 text-center mt-4">
+                <section class="mb-5">
+                    <form method="POST">
+                        <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Testimonios</button>
+                    </form>
+                </section>
+            </div>';
+
+            echo '</div>';  
+            echo '</div>';  
         }
     } catch (mysqli_sql_exception $e) {
-
-        echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto</div></div>';
+        echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto.</div></div>';
     }
 }
+
 
 
 function listarTestimonios($conexionBD)
@@ -1019,9 +1023,6 @@ function nav()
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="index.php">Inicio</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="socios.php">Socios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
@@ -1048,7 +1049,7 @@ function nav()
 
 function footer()
 {
-    echo '    <footer class="bg-light text-center py-3">
+    echo '    <footer class="bg-light footer text-center py-3">
         <p>© 2024 Club Deportivo - Todos los derechos reservados.</p>
     </footer>';
 }
