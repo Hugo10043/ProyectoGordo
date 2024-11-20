@@ -1,18 +1,8 @@
-html,
-body {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
+*{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 
-.container {
-    flex: 1;
-}
 
 .nav-item {
     transition: transform 0.3s ease, background-color 0.3s ease;
@@ -21,7 +11,6 @@ body {
 .nav-item:hover {
     transform: scale(1.1);
     border-radius: 8px;
-
 }
 
 .logo {
@@ -78,7 +67,9 @@ body {
 
 #carouselNoticias {
     max-width: 800px;
-    /* Ancho máximo del carrusel */
     margin: 0 auto;
-    /* Centrar el carrusel horizontalmente */
+}
+
+#noticiaImagen{
+    height: fit-content;
 }

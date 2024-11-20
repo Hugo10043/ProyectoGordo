@@ -28,41 +28,34 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <h2 class="text-center mb-4">Gestión de Noticias</h2>
 
         <?php
-
-        // $veces = numeroNoticias($conexion) / 4;
-
-        // $numero = 0;
-        // for ($i = 0; $i < $veces; $i++) {
-        //     listarNoticias($conexion, $numero);
-        //     $numero += 4;
-        // }
-        // echo $numero;
         
-
-        $pagina = isset($_GET['pagina']) ? (int) $_GET['pagina'] : 1;
-        $offset = ($pagina - 1) * 4;
-
-        // Mostrar las noticias en el carrusel
-        listarNoticias($conexion, $offset);
-
-        // Mostrar los botones de paginación
-        $totalNoticias = numeroNoticias($conexion);
-        $totalPaginas = ceil($totalNoticias / 4);
-
-        echo '<nav class="mt-4">';
-        echo '<ul class="pagination justify-content-center">';
-        for ($i = 1; $i <= $totalPaginas; $i++) {
-            echo '<li class="page-item ' . ($i === $pagina ? 'active' : '') . '">
-            <a class="page-link" href="?pagina=' . $i . '">' . $i . '</a>
-          </li>';
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            carrusel($conexion);
         }
-        echo '</ul>';
-        echo '</nav>';
+
+        if (isset($_POST['mostrar_todos'])) {
+            carrusel($conexion);
+        }
+
+        if (isset($_POST['insertar'])) {
+            $titulo = $_POST['titulo'];
+            $contenido = $_POST['contenido'];
+            $fecha = $_POST['fecha'];
+            $rutaImagen = guardarImagenes('imagen');
+
+            insertarNuevaNoticia($conexion, $titulo, $contenido, $rutaImagen, $fecha);
+
+        }
         ?>
 
         <section class="mb-5">
+            <section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+            </form>
+        </section>
             <h4>Insertar Nueva Noticia</h4>
-            <form method="POST" class="row g-3">
+            <form method="POST" class="row g-3" enctype="multipart/form-data">
                 <div class="col-md-6">
                     <label for="titulo" class="form-label">Titulo</label>
                     <input type="text" class="form-control" id="titulo" name="titulo" required>
@@ -73,7 +66,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 </div>
                 <div class="col-md-6">
                     <label for="imagen" class="form-label">Imagen</label>
-                    <input type="text" class="form-control" id="imagen" name="imagen" required>
+                    <input type="file" class="form-control" id="imagen" name="imagen" required>
                 </div>
                 <div class="col-md-6">
                     <label for="fecha" class="form-label">Fecha</label>

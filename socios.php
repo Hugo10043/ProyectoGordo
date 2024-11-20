@@ -77,7 +77,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                     listarSociosPorTelefono($conexion, $telefonoBuscado);
                 } else {
 
-                   echo '<div class="alert alert-warning">Escribe un nombre o telefono.</div>';
+                    echo '<div class="alert alert-warning">Escribe un nombre o telefono.</div>';
                 }
             }
 
@@ -91,16 +91,19 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 $usuario = $_POST['usuario'];
                 $contraseña = $_POST['contraseña'];
                 $telefono = $_POST['telefono'];
-                $foto = $_POST['foto'];
-                insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $foto);
+                $rutaFoto = guardarImagenes('foto');
+
+                insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
+
             }
+
             ?>
         </section>
 
         <!-- Formulario para insertar un nuevo socio -->
         <section class="mb-5">
             <h4>Insertar Nuevo Socio</h4>
-            <form method="POST" class="row g-3">
+            <form method="POST" class="row g-3" enctype="multipart/form-data">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" required>
@@ -123,7 +126,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 </div>
                 <div class="col-md-6">
                     <label for="foto" class="form-label">Foto (URL)</label>
-                    <input type="text" class="form-control" id="foto" name="foto">
+                    <input type="file" class="form-control" id="foto" name="foto">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="insertar" class="btn btn-success">Insertar</button>

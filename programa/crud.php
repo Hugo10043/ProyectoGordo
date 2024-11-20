@@ -1,9 +1,7 @@
 <?php
 function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña, $telefono, $foto)
 {
-
     $nombreSocio = strtolower($nombre);
-
     $sentencia = "INSERT INTO socio (nombre, edad, usuario, password, telefono, foto) VALUES (?, ?, ?, ?, ?, ?)";
     $consulta = $conexionBD->prepare($sentencia);
 
@@ -31,7 +29,7 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
                                     <strong>Usuario:</strong> ' . $usuario . '<br>
                                     <strong>Teléfono:</strong> ' . $telefono . '<br>
                                     <strong>Contraseña:</strong> ' . $contraseña . '
-                                    
+                                  
                                 </p>
                             </div>
                         </div>
@@ -41,13 +39,11 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
             echo '</div>';
             echo '</div>';
         }
-        //Para controlar la excepcion de clave duplicada
     } catch (mysqli_sql_exception $e) {
         echo '<div class="container my-5"><div class="alert alert-danger">Error: El usuario "' . $usuario . '" ya existe.</div></div>';
-
     }
-
 }
+
 
 function listarSocios($conexionBD)
 {
@@ -312,7 +308,7 @@ function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contra
     if ($consulta->affected_rows > 0) {
         echo "Se ha modificado el socio con ID $idSocio. Redirigiendo...";
         header("Refresh:3; url=socios.php");
-        
+
     } else {
         echo "No se ha modificado el socio. Puede que el ID no exista o los datos sean los mismos.";
     }
@@ -387,7 +383,7 @@ function modificarServicio($conexionBD, $idServicio, $descripcion, $duracion, $p
     if ($consulta->affected_rows > 0) {
         echo "Se ha modificado el servicio con ID $idServicio. Redirigiendo...";
         header("Refresh:3; url=servicios.php");
-        
+
     } else {
         echo "No se ha modificado el servicio. Puede que el ID no exista o los datos sean los mismos.";
     }
@@ -561,7 +557,7 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
             echo '<div class="row gy-4">';
             echo '<h4 class="col-12 text-center mb-4">Testimonio Insertado</h4>';
 
-            
+
             echo '
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -580,7 +576,7 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
                 </div>
             </div>';
 
-            
+
             echo '
             <div class="col-12 text-center mt-4">
                 <section class="mb-5">
@@ -590,11 +586,19 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
                 </section>
             </div>';
 
-            echo '</div>';  
-            echo '</div>';  
+            echo '</div>';
+            echo '</div>';
         }
     } catch (mysqli_sql_exception $e) {
         echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto.</div></div>';
+        echo '
+            <div class="col-12 text-center mt-4">
+                <section class="mb-5">
+                    <form method="POST">
+                        <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Testimonios</button>
+                    </form>
+                </section>
+            </div>';
     }
 }
 
@@ -631,7 +635,7 @@ function listarTestimonios($conexionBD)
         <div class="accordion-body bg-light">
             <div class="container">
                 <p><strong>Testimonio:</strong> ' . $contenido . '</p>
-                <p class="card-text"><small class="text-muted">ID: ' .$id . '</small></p>
+                <p class="card-text"><small class="text-muted">ID: ' . $id . '</small></p>
             </div>
         </div>
     </div>
@@ -694,12 +698,28 @@ function insertarNuevaNoticia($conexionBD, $titulo, $contenido, $imagen, $fecha)
 
     $consulta->bind_param("ssss", $titulo, $contenido, $imagen, $fecha);
 
-    $consulta->execute();
+    try {
+        $consulta->execute();
 
-    if ($consulta->affected_rows > 0) {
-        echo "Se ha insertado la nueva noticia.";
-    } else {
-        echo "No se ha insertado la nueva noticia.";
+        if ($consulta->affected_rows > 0) {
+
+            $contenidoLimitado = implode(' ', array_slice(explode(' ', $contenido), 0, 3)) . '...';
+
+            echo '<div class="container my-5">';
+            echo '<div class="row gy-4">';
+            echo '<h4>Socio Insertado</h4>';
+            echo '<div class="card mx-auto" style="width: 50%;">
+                    <img src="' . $imagen . '" class="card-img-top" alt="Imagen de ' . $titulo . '" style="height: 300px; object-fit: contain;">
+                    <div class="card-body">
+                        <h5 class="card-title">' . $titulo . '</h5>
+                        <p class="card-text">' . $contenidoLimitado . '</p>
+                        <p class="text-muted"><small>Fecha de publicación: ' . $fecha . '</small></p>
+                    </div>';
+            echo '</div>';
+            echo '</div><br>';
+        }
+    } catch (mysqli_sql_exception $e) {
+        echo '<div class="container my-5"><div class="alert alert-danger">Error: El noticia con titulo "' . $titulo . '" ya existe.</div></div>';
     }
 }
 
@@ -746,6 +766,7 @@ function listarNoticias($conexionBD, $numero)
                     <div class="card-body">
                         <h5 class="card-title">' . $titulo . '</h5>
                         <p class="card-text">' . $contenidoLimitado . '</p>
+                        <p><a href="ver_noticia.php?id=' . $id . '" class="btn btn-warning">Ver completa</a></p>
                         <p class="text-muted"><small>Fecha de publicación: ' . $fecha . '</small></p>
                     </div>
                 </div>
@@ -753,7 +774,7 @@ function listarNoticias($conexionBD, $numero)
             $activa = false; // Despues las demas no son activas
         }
 
-        echo '</div>'; 
+        echo '</div>';
 
         // Controles del carrusel
         echo '
@@ -787,14 +808,14 @@ function listarUltimasNoticias($conexionBD)
         $id = $fila["id"];
         $titulo = $fila["titulo"];
         $contenido = $fila["contenido"];
-        $imagen = $fila["imagen"]; 
+        $imagen = $fila["imagen"];
         $fecha = $fila["fecha"];
 
         // Extraer las primeras tres palabras del contenido
-        $contenido_array = explode(' ', $contenido); 
+        $contenido_array = explode(' ', $contenido);
 
         // Divide el contenido en palabras y coge las 3 primeras
-        $contenido_resumido = implode(' ', array_slice($contenido_array, 0, 3)); 
+        $contenido_resumido = implode(' ', array_slice($contenido_array, 0, 3));
 
         // Alternancia entre la izquierda y la derecha
         if ($contador % 2 == 0) {
@@ -834,34 +855,49 @@ function listarUltimasNoticias($conexionBD)
 
 function verNoticiaIndividual($conexionBD, $id)
 {
-
     $titulo = "";
     $contenido = "";
     $imagen = "";
     $fecha = "";
 
-
     $consulta = "SELECT * FROM noticia WHERE id=?";
-
     $resultado = $conexionBD->prepare($consulta);
-
-
     $resultado->bind_param("i", $id);
-
     $resultado->bind_result($id, $titulo, $contenido, $imagen, $fecha);
     $resultado->execute();
 
-
-    echo "<table border=1px>";
-    echo "<tr><th>ID</th><th>TITULO</th><th>CONTENIDO</th><th>IMAGEN</th><th>FECHA</th></tr>";
-
+ 
     while ($resultado->fetch()) {
-        echo "<tr><td>$id</td><td>$titulo</td><td>$contenido</td><td>$imagen</td><td>$fecha</td></tr>";
+        echo '
+        <div class="container my-5">
+        <div>
+                <a href="noticias.php" class="btn btn-secondary mt-3">Volver</a>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-9">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h1 class="card-title">' . $titulo . '</h1>
+                            
+                            <img src="' . $imagen . '" class="img-fluid rounded float-start me-3" alt="Imagen de ' . $titulo . '" style="max-width: 250px; height: auto; object-fit: cover;">
+                            
+                            <p class="card-text">
+                                ' . $contenido . '
+                            </p>
+                            
+                            <p class="text-muted"><small>Publicado el: ' . $fecha . '</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>';
     }
-
-    echo "</table>";
-
 }
+
+
+
+
+
 
 ?>
 
@@ -1032,43 +1068,85 @@ function listarCitasPorFecha($conexionBD, $date)
 
 
 <?php
+function guardarImagenes($foto)
+{
+
+    $directorioDestino = 'imagenes/';
+    $nombreArchivo = $_FILES[$foto]['name'];
+    $rutaCompleta = $directorioDestino . $nombreArchivo;
+
+
+    // Mover el archivo a la carpeta de destino
+    if (move_uploaded_file($_FILES[$foto]['tmp_name'], $rutaCompleta)) {
+        return $rutaCompleta;
+    }
+}
+
+
+function carrusel($conexion)
+{
+    
+    $pagina = $_GET['pagina'] ?? 1;
+    $division = ($pagina - 1) * 4;
+
+    // Mostrar las noticias en el carrusel
+    listarNoticias($conexion, $division);
+
+    // Paginación
+    $totalNoticias = numeroNoticias($conexion);
+    $totalPaginas = ceil($totalNoticias / 4);
+
+    echo '<nav class="mt-4"><ul class="pagination justify-content-center">';
+
+    for ($i = 1; $i <= $totalPaginas; $i++) {
+        echo '<li class="page-item' . ($i === $pagina ? ' active' : '') . '">
+                  <a class="page-link" href="?pagina=' . $i . '">' . $i . '</a>
+              </li>';
+    }
+    echo '</ul></nav>';
+}
+
+?>
+
+<?php
 
 function nav()
 {
     echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="imagenes/icono.png" alt="Logo" class="logo me-2">
-                <span class="fw-bold">KaliMuscle</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="socios.php">Socios</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="servicios.php">Servicios</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="testimonios.php">Testimonios</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="noticias.php">Noticias</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
-                    </li>
-                    <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Contacto</a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <img src="imagenes/icono.png" alt="Logo" class="logo me-2">
+            <span class="fw-bold">KaliMuscle</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="socios.php">Socios</a>
+                </li>
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="servicios.php">Servicios</a>
+                </li>
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="testimonios.php">Testimonios</a>
+                </li>
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="noticias.php">Noticias</a>
+                </li>
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
+                </li>
+                <li class="nav-item mb-2 mb-md-2">
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Contacto</a>
+                </li>
+            </ul>
         </div>
-    </nav>';
+    </div>
+</nav>
+';
 }
 
 
