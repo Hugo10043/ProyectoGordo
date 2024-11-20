@@ -59,6 +59,26 @@ body {
     color: white;
 }
 
-.alert{
+.alert {
     width: fit-content;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #0d6efd;
+    border-radius: 25%;
+    padding: 20px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    height: 50px;
+    top: 45%;
+}
+
+#carouselNoticias {
+    max-width: 800px;
+    /* Ancho máximo del carrusel */
+    margin: 0 auto;
+    /* Centrar el carrusel horizontalmente */
 }

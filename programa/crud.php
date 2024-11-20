@@ -718,35 +718,60 @@ function numeroNoticias($conexionBD)
 
 function listarNoticias($conexionBD, $numero)
 {
-
-    $id = 0;
-    $titulo = "";
-    $contenido = "";
-    $imagen = "";
-    $fecha = "";
-
-
     $consulta = "SELECT * FROM noticia LIMIT 4 OFFSET ?";
-
     $resultado = $conexionBD->prepare($consulta);
-
-
     $resultado->bind_param("i", $numero);
-
-    $resultado->bind_result($id, $titulo, $contenido, $imagen, $fecha);
     $resultado->execute();
+    $resultado = $resultado->get_result();
+
+    if ($resultado->num_rows > 0) {
+        echo '<div id="carouselNoticias" class="carousel slide" data-bs-ride="carousel">';
+        echo '<div class="carousel-inner">';
+
+        $activa = true; // La primera es la activa
+        while ($fila = $resultado->fetch_assoc()) {
+            $id = $fila['id'];
+            $titulo = $fila['titulo'];
+            $contenido = $fila['contenido'];
+            $imagen = $fila['imagen'];
+            $fecha = $fila['fecha'];
 
 
-    echo "<table border=1px>";
-    echo "<tr><th>ID</th><th>TITULO</th><th>CONTENIDO</th><th>IMAGEN</th><th>FECHA</th></tr>";
+            $contenidoLimitado = implode(' ', array_slice(explode(' ', $contenido), 0, 3)) . '...';
 
-    while ($resultado->fetch()) {
-        echo "<tr><td>$id</td><td>$titulo</td><td>$contenido</td><td>$imagen</td><td>$fecha</td></tr>";
+            echo '
+            <div class="carousel-item ' . ($activa ? 'active' : '') . '">
+                <div class="card mx-auto" style="width: 80%;">
+                    <img src="' . $imagen . '" class="card-img-top" alt="Imagen de ' . $titulo . '" style="height: 300px; object-fit: contain;">
+                    <div class="card-body">
+                        <h5 class="card-title">' . $titulo . '</h5>
+                        <p class="card-text">' . $contenidoLimitado . '</p>
+                        <p class="text-muted"><small>Fecha de publicación: ' . $fecha . '</small></p>
+                    </div>
+                </div>
+            </div>';
+            $activa = false; // Despues las demas no son activas
+        }
+
+        echo '</div>'; 
+
+        // Controles del carrusel
+        echo '
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselNoticias" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselNoticias" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>';
+
+        echo '</div>'; // Cierra el carrusel
+    } else {
+        echo '<p class="text-center text-muted">No hay noticias disponibles.</p>';
     }
-
-    echo "</table>";
-
 }
+
 
 function listarUltimasNoticias($conexionBD)
 {
@@ -1032,10 +1057,10 @@ function nav()
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="testimonios.php">Testimonios</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="noticias.php">Noticias</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
-                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Noticias</a>
+                        <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
                     </li>
                     <li class="nav-item mb-2 mb-md-2">
                         <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Contacto</a>
