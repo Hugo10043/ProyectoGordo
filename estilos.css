@@ -2,8 +2,6 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
-
 .nav-item {
     transition: transform 0.3s ease, background-color 0.3s ease;
 }

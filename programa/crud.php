@@ -1089,18 +1089,18 @@ function carrusel($conexion)
     $pagina = $_GET['pagina'] ?? 1;
     $division = ($pagina - 1) * 4;
 
-    // Mostrar las noticias en el carrusel
     listarNoticias($conexion, $division);
 
-    // Paginación
+    // Paginas
     $totalNoticias = numeroNoticias($conexion);
     $totalPaginas = ceil($totalNoticias / 4);
 
     echo '<nav class="mt-4"><ul class="pagination justify-content-center">';
 
     for ($i = 1; $i <= $totalPaginas; $i++) {
-        echo '<li class="page-item' . ($i === $pagina ? ' active' : '') . '">
-                  <a class="page-link" href="?pagina=' . $i . '">' . $i . '</a>
+        $activa = ($i == $pagina) ? 'active text-white bg-primary' : '';
+        echo '<li class="page-item ' . $activa . '">
+                <a class="page-link ' . $activa . '" href="?pagina=' . $i . '">' . $i . '</a>
               </li>';
     }
     echo '</ul></nav>';

@@ -30,6 +30,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <?php
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            
             carrusel($conexion);
         }
 
@@ -45,15 +46,16 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 
             insertarNuevaNoticia($conexion, $titulo, $contenido, $rutaImagen, $fecha);
 
-        }
-        ?>
-
-        <section class="mb-5">
+            echo'<section class="mb-5">
             <section class="mb-5">
             <form method="POST">
                 <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
             </form>
-        </section>
+        </section>';
+
+        }
+        ?>
+
             <h4>Insertar Nueva Noticia</h4>
             <form method="POST" class="row g-3" enctype="multipart/form-data">
                 <div class="col-md-6">
