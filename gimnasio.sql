@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-11-2024 a las 14:10:43
+-- Tiempo de generación: 21-11-2024 a las 12:40:11
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,8 +40,9 @@ CREATE TABLE `citas` (
 --
 
 INSERT INTO `citas` (`id_socio`, `id_servicio`, `fecha`, `hora`, `cancelada`) VALUES
-(1, 31, '2024-11-07', '17:45:00', 0),
-(3, 31, '2024-11-05', '17:45:00', 0);
+(1, 31, '2024-06-13', '17:45:00', 0),
+(9, 29, '2024-11-30', '17:30:00', 0),
+(11, 29, '2024-11-21', '17:45:00', 0);
 
 -- --------------------------------------------------------
 
@@ -69,7 +70,8 @@ INSERT INTO `noticia` (`id`, `titulo`, `contenido`, `imagen`, `fecha`) VALUES
 (41, 'Joder', 'JODER ME CAGO EN TODO', 'imagenes/peru.png', '2024-11-30'),
 (42, 'jajajajaja', 'jejejjejejejeje', 'imagenes/Designer.jpeg', '2024-11-20'),
 (43, 'ññññññññññññññññ', 'aaaaaaaaaaaaaaaaaaaaaaaaa', 'imagenes/Youtube.png', '2024-11-02'),
-(54, 'tytrhhtrhtrhtrh', 'hhhhhgerge', 'imagenes/Instagram.png', '2024-09-18');
+(54, 'tytrhhtrhtrhtrh', 'hhhhhgerge', 'imagenes/Instagram.png', '2024-09-18'),
+(55, 'hoy me cago', 'me cago', 'imagenes/Youtube.png', '2024-11-07');
 
 -- --------------------------------------------------------
 
@@ -197,7 +199,7 @@ ALTER TABLE `testimonio`
 -- AUTO_INCREMENT de la tabla `noticia`
 --
 ALTER TABLE `noticia`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `servicio`
