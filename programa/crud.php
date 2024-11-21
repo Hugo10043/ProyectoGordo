@@ -835,7 +835,7 @@ function listarUltimasNoticias($conexionBD)
                 <div class="card-body">
                     <h5 class="card-title">' . $titulo . '</h5>
                     <p class="card-text">' . $contenido_resumido . '...</p> <!-- Muestra las primeras 3 palabras del contenido -->
-                    <a href="noticia.php?id=' . $id . '" class="btn btn-primary">Leer más</a> <!-- Botón para leer la noticia completa -->
+                    <a href="ver_noticia.php?id=' . $id . '" class="btn btn-primary">Leer más</a> <!-- Botón para leer la noticia completa -->
                 </div>
                 <div class="card-footer text-muted">
                     <small>Publicado el ' . date('d M Y', strtotime($fecha)) . '</small>
@@ -866,7 +866,7 @@ function verNoticiaIndividual($conexionBD, $id)
     $resultado->bind_result($id, $titulo, $contenido, $imagen, $fecha);
     $resultado->execute();
 
- 
+
     while ($resultado->fetch()) {
         echo '
         <div class="container my-5">
@@ -983,6 +983,43 @@ function borrarCita($conexionBD, $id_socio, $id_servicio)
     }
 }
 
+function listarCitas($conexionBD)
+{
+
+    $sentencia = "SELECT id_socio, id_servicio, telefono, fecha, hora, cancelada FROM citas,socio WHERE id_socio=id";
+    $resultado = $conexionBD->query($sentencia);
+
+
+    while ($cita = $resultado->fetch_array(MYSQLI_ASSOC)) {
+        $id_socio = $cita["id_socio"];
+        $id_servicio = $cita["id_servicio"];
+        $telefono = $cita["telefono"];
+        $fecha = $cita["fecha"];
+        $hora = $cita["hora"];
+        $cancelada = $cita["cancelada"];
+
+        echo 'Socio:' . $id_socio . '. Servicio:' . $id_servicio . '. Telefono:' . $telefono . '. Fecha:' . $fecha . '. Hora:' . $hora . ' .Cancelada:' . $cancelada . '.<br>';
+    }
+}
+
+function numeroCitas($conexionBD,$fecha)
+{
+
+
+    $consulta = "SELECT COUNT(id_socio) as Total FROM citas  WHERE fecha=?";
+    $resultado = $conexionBD->prepare($consulta);
+
+    $resultado->bind_param("s", $fecha);
+
+    $resultado->execute();
+
+    $resultado = $resultado->get_result();
+
+    if ($fila = $resultado->fetch_assoc()) {
+        $total = (int) $fila["Total"];
+        return $total;
+    }
+}
 
 function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
 {
@@ -1085,7 +1122,7 @@ function guardarImagenes($foto)
 
 function carrusel($conexion)
 {
-    
+
     $pagina = $_GET['pagina'] ?? 1;
     $division = ($pagina - 1) * 4;
 
@@ -1104,6 +1141,129 @@ function carrusel($conexion)
               </li>';
     }
     echo '</ul></nav>';
+}
+
+
+function calendario($conexion)
+{
+    // Obtener el mes y año actual por la URL y si no se le pasa nada coge el actual
+    $mes = isset($_GET['mes']) ? (int) $_GET['mes'] : date("n");
+    $año = isset($_GET['anio']) ? (int) $_GET['anio'] : date("Y");
+
+    // Calcular mes anterior y siguiente
+    $mesAnterior = $mes - 1;
+    $añoAnterior = $año;
+    if ($mesAnterior < 1) {
+        $mesAnterior = 12;
+        $añoAnterior--;
+    }
+
+    $mesSiguiente = $mes + 1;
+    $añoSiguiente = $año;
+    if ($mesSiguiente > 12) {
+        $mesSiguiente = 1;
+        $añoSiguiente++;
+    }
+
+    // Dias del mes
+    $dias = cal_days_in_month(CAL_GREGORIAN, $mes, $año);
+
+    // Primer dia del mes
+    $primerDia = date("N", strtotime("$año-$mes-01"));
+
+
+    $nombresDias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+    $nombresMeses = [
+        1 => "Enero",
+        2 => "Febrero",
+        3 => "Marzo",
+        4 => "Abril",
+        5 => "Mayo",
+        6 => "Junio",
+        7 => "Julio",
+        8 => "Agosto",
+        9 => "Septiembre",
+        10 => "Octubre",
+        11 => "Noviembre",
+        12 => "Diciembre"
+    ];
+
+    //Fecha actual
+    $diaActual = date("j");
+    $mesActual = date("n");
+    $añoActual = date("Y");
+
+
+    // Generar calendario
+    echo '<div class="container my-5">';
+
+    // Navegacion
+    echo '<div class="d-flex justify-content-between align-items-center mb-4">';
+    echo '<a href="?mes=' . $mesAnterior . '&anio=' . $añoAnterior . '" class="btn btn-primary">&laquo; Mes Anterior</a>';
+    echo '<h2 class="text-center">' . $nombresMeses[$mes] . ' ' . $año . '</h2>';
+    echo '<a href="?mes=' . $mesSiguiente . '&anio=' . $añoSiguiente . '" class="btn btn-primary">Mes Siguiente &raquo;</a>';
+    echo '</div>';
+
+    echo '<table class="table table-bordered text-center">';
+
+
+    echo '<thead><tr>';
+    foreach ($nombresDias as $dia) {
+        echo '<th>' . $dia  . '</th>';
+    }
+    echo '</tr></thead>';
+    echo '<tbody><tr>';
+
+    // Espacios vacíos antes
+    for ($i = 1; $i < $primerDia; $i++) {
+        echo '<td></td>';
+    }
+
+    // Generar los dias
+    for ($dia = 1; $dia <= $dias; $dia++) {
+
+        //Le paso un formato y los valores a sprintf para que me devuelva la fecha asi "2024-05-02" por ejemplo
+        $fechaCompleta = sprintf("%04d-%02d-%02d", $año, $mes, $dia);
+
+        $citas = numeroCitas($conexion, $fechaCompleta);
+
+        if (($primerDia + $dia - 2) % 7 === 0) {
+            echo '</tr><tr>';
+        }
+
+
+        // Resaltar el dia actual
+        if ($dia == $diaActual && $mes == $mesActual && $año == $añoActual) {
+            //Compruebo si tiene citas o no
+            if($citas>0){
+                echo '<td class="bg-primary text-white fw-bold">' . $dia . $citas . '</td>';
+            }else{
+                echo '<td class="bg-primary text-white fw-bold">' . $dia . '</td>';
+            }
+        } else {
+            if ($citas > 0){
+                echo '<td>' . $dia . $citas. '</td>';
+            }else{
+                echo '<td>' . $dia . '</td>';
+            }
+            
+        }
+    }
+
+    //Calcular los espacios del final
+    $ultimoDiaDeLaSemana = ($primerDia + $dias - 1) % 7;
+
+    // Agregar los espacios
+    if ($ultimoDiaDeLaSemana !== 0) {
+        for ($i = $ultimoDiaDeLaSemana + 1; $i <= 7; $i++) {
+            echo '<td></td>';
+        }
+    }
+
+    echo '</tr></tbody>';
+    echo '</table>';
+    echo '</div>';
 }
 
 ?>
@@ -1137,10 +1297,7 @@ function nav()
                     <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="noticias.php">Noticias</a>
                 </li>
                 <li class="nav-item mb-2 mb-md-2">
-                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Citas</a>
-                </li>
-                <li class="nav-item mb-2 mb-md-2">
-                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="#">Contacto</a>
+                    <a class="nav-link text-primary bg-white rounded px-3 py-2 mx-1" href="citas.php">Citas</a>
                 </li>
             </ul>
         </div>

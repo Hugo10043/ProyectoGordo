@@ -46,7 +46,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                     Únete a nuestra comunidad de deportistas apasionados y descubre por qué <strong>Kalimuscle</strong>
                     es el lugar perfecto para entrenar, crecer y triunfar.
                 </p>
-                <a href="#contacto" class="btn btn-primary px-4 py-2">Contáctanos</a>
+                <a href="#" class="btn btn-primary px-4 py-2">Contáctanos</a>
             </div>
         </div>
     </section>
