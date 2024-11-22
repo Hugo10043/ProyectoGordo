@@ -680,9 +680,6 @@ function listarTestimonioAleatorio($conexionBD)
         echo "No hay testimonios disponibles.";
     }
 }
-
-
-
 ?>
 
 
@@ -894,11 +891,6 @@ function verNoticiaIndividual($conexionBD, $id)
     }
 }
 
-
-
-
-
-
 ?>
 
 
@@ -983,26 +975,8 @@ function borrarCita($conexionBD, $id_socio, $id_servicio)
     }
 }
 
-function listarCitas($conexionBD)
-{
 
-    $sentencia = "SELECT id_socio, id_servicio, telefono, fecha, hora, cancelada FROM citas,socio WHERE id_socio=id";
-    $resultado = $conexionBD->query($sentencia);
-
-
-    while ($cita = $resultado->fetch_array(MYSQLI_ASSOC)) {
-        $id_socio = $cita["id_socio"];
-        $id_servicio = $cita["id_servicio"];
-        $telefono = $cita["telefono"];
-        $fecha = $cita["fecha"];
-        $hora = $cita["hora"];
-        $cancelada = $cita["cancelada"];
-
-        echo 'Socio:' . $id_socio . '. Servicio:' . $id_servicio . '. Telefono:' . $telefono . '. Fecha:' . $fecha . '. Hora:' . $hora . ' .Cancelada:' . $cancelada . '.<br>';
-    }
-}
-
-function numeroCitas($conexionBD,$fecha)
+function numeroCitas($conexionBD, $fecha)
 {
 
 
@@ -1021,85 +995,229 @@ function numeroCitas($conexionBD,$fecha)
     }
 }
 
+function listarCitas($conexionBD, $fecha)
+{
+
+    $id_socio = 0;
+    $id_servicio = 0;
+    $telefono = "";
+    $fechaResultado = "";
+    $hora = "";
+    $cancelada = 0;
+
+
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->bind_param("s", $fecha);
+
+    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fechaResultado, $hora, $cancelada);
+
+    $consulta->execute();
+
+    echo '<div class="container my-5">';
+    echo '<h2 class="text-center mb-4">Citas del día ' . $fecha . '</h2>';
+    echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
+
+    $hayCitas = false;
+
+    while ($consulta->fetch()) {
+        $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
+        $hayCitas = true;
+        echo '
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
+                    <p class="card-text">
+                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
+                        <strong>Teléfono:</strong> ' . $telefono . '<br>
+                        <strong>Hora:</strong> ' . $hora . '<br>
+                        ' . $estado . '
+                    </p>
+                    <p class="text-muted"><small>Fecha: ' . $fechaResultado . '</small></p>
+                </div>
+            </div>
+        </div>';
+    }
+
+    echo '</div>';
+
+    if (!$hayCitas) {
+        echo '<div class="alert alert-info text-center">No hay citas para la fecha seleccionada.</div>';
+    }
+
+    echo '</div>';
+}
+
 function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
 {
     $id_socio = 0;
     $id_servicio = 0;
+    $telefono="";
     $fecha = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT * FROM citas WHERE id_socio =(SELECT id FROM socio WHERE nombre=?)";
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE nombre=?)";
     $consulta = $conexionBD->prepare($sentencia);
     $cadena = strtolower($nombreSocio);
 
     $consulta->bind_param("s", $cadena);
 
-    $consulta->bind_result($id_socio, $id_servicio, $fecha, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fecha, $hora, $cancelada);
     $consulta->execute();
 
-    echo "<table border=1px>";
-    echo "<tr><th>SOCIO</th><th>SERVICIO</th><th>FECHA</th><th>HORA</th></tr>";
+
+    echo '<div class="container my-5">';
+    echo '<h2 class="text-center mb-4">Busqueda de citas por servicios </h2>';
+    echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
+
+    $hayCitas = false;
 
     while ($consulta->fetch()) {
-        echo "<tr><td>$id_socio</td><td>$id_servicio</td><td>$fecha</td><td>$hora</td></tr>";
+        $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
+        $hayCitas = true;
+        
+        echo '
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
+                    <p class="card-text">
+                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
+                        <strong>Teléfono:</strong> ' . $telefono . '<br>
+                        <strong>Hora:</strong> ' . $hora . '<br>
+                        ' . $estado . '
+                    </p>
+                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+                </div>
+            </div>
+        </div>';
     }
-    echo "</table>";
+
+    echo '</div>';
+
+    if (!$hayCitas) {
+        echo '<div class="alert alert-info text-center">No hay citas con ese socio asociado.</div>';
+    }
+
+    echo '</div>';
+
 }
 
 function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
 {
     $id_socio = 0;
     $id_servicio = 0;
+    $telefono="";
     $fecha = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT * FROM citas WHERE id_servicio =(SELECT id FROM servicio WHERE descripcion=?)";
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND servicio.id=(SELECT id FROM servicio WHERE descripcion=?)";
+
     $consulta = $conexionBD->prepare($sentencia);
     $cadena = strtolower($nombreServicio);
 
     $consulta->bind_param("s", $cadena);
 
-    $consulta->bind_result($id_socio, $id_servicio, $fecha, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fecha, $hora, $cancelada);
     $consulta->execute();
 
-    echo "<table border=1px>";
-    echo "<tr><th>SOCIO</th><th>SERVICIO</th><th>FECHA</th><th>HORA</th></tr>";
+
+    echo '<div class="container my-5">';
+    echo '<h2 class="text-center mb-4">Busqueda de citas por socios </h2>';
+    echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
+
+    $hayCitas = false;
 
     while ($consulta->fetch()) {
-        echo "<tr><td>$id_socio</td><td>$id_servicio</td><td>$fecha</td><td>$hora</td></tr>";
+        $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
+        $hayCitas = true;
+        echo '
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
+                    <p class="card-text">
+                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
+                        <strong>Teléfono:</strong> ' . $telefono . '<br>
+                        <strong>Hora:</strong> ' . $hora . '<br>
+                        ' . $estado . '
+                    </p>
+                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+                </div>
+            </div>
+        </div>';
     }
-    echo "</table>";
+
+    echo '</div>';
+
+    if (!$hayCitas) {
+        echo '<div class="alert alert-info text-center">No hay citas con ese servicio asociado.</div>';
+    }
+
+    echo '</div>';
+
 }
 
-function listarCitasPorFecha($conexionBD, $date)
+function listarCitasPorFecha($conexionBD, $fecha)
 {
+
     $id_socio = 0;
     $id_servicio = 0;
-    $fecha = "";
+    $telefono = "";
+    $fechaResultado = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT * FROM citas WHERE fecha =?";
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
     $consulta = $conexionBD->prepare($sentencia);
 
+    $consulta->bind_param("s", $fecha);
 
-    $consulta->bind_param("s", $date);
+    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fechaResultado, $hora, $cancelada);
 
-    $consulta->bind_result($id_socio, $id_servicio, $fecha, $hora, $cancelada);
     $consulta->execute();
 
-    echo "<table border=1px>";
-    echo "<tr><th>SOCIO</th><th>SERVICIO</th><th>FECHA</th><th>HORA</th></tr>";
+    echo '<div class="container my-5">';
+    echo '<h2 class="text-center mb-4">Busqueda de citas por fecha </h2>';
+    echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
+
+    $hayCitas = false;
 
     while ($consulta->fetch()) {
-        echo "<tr><td>$id_socio</td><td>$id_servicio</td><td>$fecha</td><td>$hora</td></tr>";
+        $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
+        $hayCitas = true;
+        echo '
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
+                    <p class="card-text">
+                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
+                        <strong>Teléfono:</strong> ' . $telefono . '<br>
+                        <strong>Hora:</strong> ' . $hora . '<br>
+                        ' . $estado . '
+                    </p>
+                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+                </div>
+            </div>
+        </div>';
     }
-    echo "</table>";
+
+    echo '</div>';
+
+    if (!$hayCitas) {
+        echo '<div class="alert alert-info text-center">No hay citas en esta fecha.</div>';
+    }
+
+    echo '</div>';
+
 }
 ?>
 
@@ -1210,7 +1328,7 @@ function calendario($conexion)
 
     echo '<thead><tr>';
     foreach ($nombresDias as $dia) {
-        echo '<th>' . $dia  . '</th>';
+        echo '<th>' . $dia . '</th>';
     }
     echo '</tr></thead>';
     echo '<tbody><tr>';
@@ -1232,24 +1350,44 @@ function calendario($conexion)
             echo '</tr><tr>';
         }
 
-
-        // Resaltar el dia actual
+        // Resaltar dia actual
         if ($dia == $diaActual && $mes == $mesActual && $año == $añoActual) {
-            //Compruebo si tiene citas o no
-            if($citas>0){
-                echo '<td class="bg-primary text-white fw-bold">' . $dia . $citas . '</td>';
-            }else{
-                echo '<td class="bg-primary text-white fw-bold">' . $dia . '</td>';
+
+            // Dia actual
+            // Mostrar icono si hay citas
+            if ($citas > 0) {
+                echo '<td class="position-relative bg-primary text-white fw-bold">
+                <a href="ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-white text-decoration-none d-block h-100">
+                    ' . $dia . '
+                    <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
+                        <span class="badge bg-warning">' . $citas . '</span>
+                        <img src="imagenes/icono.png" alt="Cita">
+                    </div>
+                </a>
+              </td>';
+            } else {
+                echo '<td class="position-relative bg-primary text-white fw-bold">' . $dia . '</td>';
             }
         } else {
-            if ($citas > 0){
-                echo '<td>' . $dia . $citas. '</td>';
-            }else{
-                echo '<td>' . $dia . '</td>';
+            // Otros dias
+            if ($citas > 0) {
+                echo '<td class="position-relative">
+                <a href="ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-black text-decoration-none d-block h-100">
+                    ' . $dia . '
+                    <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
+                        <span class="badge bg-warning">' . $citas . '</span>
+                        <img src="imagenes/icono.png" alt="Cita">
+                    </div>
+                </a>
+              </td>';
+            } else {
+                echo '<td class="position-relative">' . $dia . '</td>';
             }
-            
         }
     }
+
+
+
 
     //Calcular los espacios del final
     $ultimoDiaDeLaSemana = ($primerDia + $dias - 1) % 7;
@@ -1261,11 +1399,12 @@ function calendario($conexion)
         }
     }
 
+
     echo '</tr></tbody>';
     echo '</table>';
     echo '</div>';
-}
 
+}
 ?>
 
 <?php

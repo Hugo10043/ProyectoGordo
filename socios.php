@@ -62,7 +62,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 
                 echo '<section class="mb-5">
             <form method="POST">
-                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Socios</button>
             </form>
         </section>';
 
@@ -75,8 +75,9 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 if (!empty($telefonoBuscado)) {
 
                     listarSociosPorTelefono($conexion, $telefonoBuscado);
-                } else {
+                }
 
+                if(empty($nombreBuscado)&&empty($telefonoBuscado)){
                     echo '<div class="alert alert-warning">Escribe un nombre o telefono.</div>';
                 }
             }

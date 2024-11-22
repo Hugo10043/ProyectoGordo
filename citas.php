@@ -19,17 +19,103 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
     <link rel="stylesheet" href="estilos.css">
 
 </head>
+
 <body>
     <?php
     nav();
     ?>
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Gestión de Socios</h2>
 
-    <?php
-    calendario($conexion);
-    ?>
+        <!-- Formulario de busqueda -->
+        <section class="mb-5">
+            <h4>Buscar Socios</h4>
+            <form method="POST" class="row g-3">
+                <div class="col-md-6">
+                    <label for="socio" class="form-label">Socio</label>
+                    <input type="text" class="form-control" id="socio" name="socio" placeholder="Nombre del socio">
+                </div>
+                <div class="col-md-6">
+                    <label for="servicio" class="form-label">Servicio</label>
+                    <input type="text" class="form-control" id="servicio" name="servicio"
+                        placeholder="Nombre del servicio">
+                </div>
+                <div class="col-md-6">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha"
+                        placeholder="Fecha">
+                </div>
+                <div class="col-12">
+                    <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </form>
+        </section>
+    
 
+    <!-- Listado -->
+        <section>
+        <?php
+
+        //Si no se manda nada por formulario sale el calendario.
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            calendario($conexion);
+        }
+
+        if (isset($_POST['buscar'])) {
+
+            $nombreSocio = $_POST['socio'];
+            $nombreServicio = $_POST['servicio'];
+            $fecha= $_POST['fecha'];
+
+            echo '<section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar" class="btn btn-secondary">Mostrar Calendario</button>
+            </form>
+        </section>';
+
+            if (!empty($nombreSocio)) {
+
+                listarCitasPorNombreSocio($conexion, $nombreSocio);
+
+            }
+
+            if (!empty($nombreServicio)) {
+
+                listarCitasPorNombreServicio($conexion, $nombreServicio);
+            }
+
+            if (!empty($fecha)) {
+
+                listarCitasPorFecha($conexion, $fecha);
+            }
+
+            if (empty($nombreSocio) && empty($nombreServicio) && empty($fecha)) {
+                echo '<div class="alert alert-warning">Escribe un algun nombre de socio, de servicio o alguna fecha.';
+            }
+        }
+
+        if (isset($_POST['mostrar'])) {
+            calendario($conexion);
+        }
+
+        // if (isset($_POST['insertar'])) {
+        //     $nombre = $_POST['nombre'];
+        //     $edad = $_POST['edad'];
+        //     $usuario = $_POST['usuario'];
+        //     $contraseña = $_POST['contraseña'];
+        //     $telefono = $_POST['telefono'];
+        //     $rutaFoto = guardarImagenes('foto');
+
+        //     insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
+
+        // }
+
+        ?>
+    </section>
+</div>
     <?php
     footer();
     ?>
 </body>
+
 </html>
