@@ -98,17 +98,14 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             calendario($conexion);
         }
 
-        // if (isset($_POST['insertar'])) {
-        //     $nombre = $_POST['nombre'];
-        //     $edad = $_POST['edad'];
-        //     $usuario = $_POST['usuario'];
-        //     $contraseña = $_POST['contraseña'];
-        //     $telefono = $_POST['telefono'];
-        //     $rutaFoto = guardarImagenes('foto');
+        if (isset($_POST['cancelar'])) {
+            $nombre = $_POST['nombre'];
+            
+            $rutaFoto = guardarImagenes('foto');
 
-        //     insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
+            insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
 
-        // }
+        }
 
         ?>
     </section>

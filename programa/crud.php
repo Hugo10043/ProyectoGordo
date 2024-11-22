@@ -916,41 +916,38 @@ function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
 
 function cancelarCita($conexionBD, $id_socio, $id_servicio)
 {
-    $dia = 0;
-
+    
     $sentencia1 = "SELECT DAY(fecha) AS Dia FROM citas WHERE id_socio=? AND id_servicio=?";
-
     $consulta1 = $conexionBD->prepare($sentencia1);
-
     $consulta1->bind_param("ii", $id_socio, $id_servicio);
-
-    $consulta1->bind_result($dia);
-
     $consulta1->execute();
 
-    while ($consulta1->fetch()) {
-        $fecha = (int) $dia;
+    $resultado1 = $consulta1->get_result();  
+    if ($fila1 = $resultado1->fetch_assoc()) {
+        $fecha = (int) $fila1['Dia'];  
+    } else {
+        echo "No se encontró la cita.";
+        return;
     }
 
+    
     $diaHoy = (int) date("j");
 
+    
     if ($diaHoy === $fecha) {
-        echo "No puedes anular la cita. Deberias haberlo hecho con un dia de antelacion.";
-
-    } else if (date("d") > $fecha) {
+        echo "No puedes anular la cita. Deberías haberlo hecho con un día de antelación.";
+    } else if ($diaHoy > $fecha) {
         echo "No puedes anular una cita ya pasada.";
-
     } else {
-
-        $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND  id_servicio=?";
+        
+        $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND id_servicio=?";
         $consulta2 = $conexionBD->prepare($sentencia2);
-
         $consulta2->bind_param("ii", $id_socio, $id_servicio);
-
         $consulta2->execute();
 
+        
         if ($consulta2->affected_rows > 0) {
-            echo "Se ha cancelado la cita.";
+            echo "Se ha cancelado la cita. Redirigiendo...";
         } else {
             echo "No se ha cancelado la cita.";
         }
@@ -1000,18 +997,20 @@ function listarCitas($conexionBD, $fecha)
 
     $id_socio = 0;
     $id_servicio = 0;
+    $nombre = "";
+    $descripcion = "";
     $telefono = "";
     $fechaResultado = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
+    $sentencia = "SELECT id_socio, id_servicio, nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
     $consulta = $conexionBD->prepare($sentencia);
 
     $consulta->bind_param("s", $fecha);
 
-    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fechaResultado, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $nombre, $descripcion, $telefono, $fechaResultado, $hora, $cancelada);
 
     $consulta->execute();
 
@@ -1024,21 +1023,26 @@ function listarCitas($conexionBD, $fecha)
     while ($consulta->fetch()) {
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
+        $boton = $cancelada
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+
         echo '
-        <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
-                    <p class="card-text">
-                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
-                        <strong>Teléfono:</strong> ' . $telefono . '<br>
-                        <strong>Hora:</strong> ' . $hora . '<br>
-                        ' . $estado . '
-                    </p>
-                    <p class="text-muted"><small>Fecha: ' . $fechaResultado . '</small></p>
-                </div>
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Socio: ' . $nombre . '</h5>
+                <p class="card-text">
+                    <strong>Servicio:</strong> ' . $descripcion . '<br>
+                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Hora:</strong> ' . $hora . '<br>
+                    ' . $estado . '
+                </p>
+                <p class="text-muted"><small>Fecha: ' . $fechaResultado . '</small></p>
+                ' . $boton . '
             </div>
-        </div>';
+        </div>
+    </div>';
     }
 
     echo '</div>';
@@ -1054,19 +1058,21 @@ function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
 {
     $id_socio = 0;
     $id_servicio = 0;
-    $telefono="";
+    $nombre = "";
+    $descripcion = "";
+    $telefono = "";
     $fecha = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE nombre=?)";
+    $sentencia = "SELECT id_socio, id_servicio, nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE nombre=?)";
     $consulta = $conexionBD->prepare($sentencia);
     $cadena = strtolower($nombreSocio);
 
     $consulta->bind_param("s", $cadena);
 
-    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fecha, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $nombre, $descripcion, $telefono, $fecha, $hora, $cancelada);
     $consulta->execute();
 
 
@@ -1079,22 +1085,26 @@ function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
     while ($consulta->fetch()) {
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
-        
+        $boton = $cancelada
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+
         echo '
-        <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
-                    <p class="card-text">
-                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
-                        <strong>Teléfono:</strong> ' . $telefono . '<br>
-                        <strong>Hora:</strong> ' . $hora . '<br>
-                        ' . $estado . '
-                    </p>
-                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
-                </div>
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Socio: ' . $nombre . '</h5>
+                <p class="card-text">
+                    <strong>Servicio:</strong> ' . $descripcion . '<br>
+                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Hora:</strong> ' . $hora . '<br>
+                    ' . $estado . '
+                </p>
+                <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+                ' . $boton . '
             </div>
-        </div>';
+        </div>
+    </div>';
     }
 
     echo '</div>';
@@ -1111,20 +1121,22 @@ function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
 {
     $id_socio = 0;
     $id_servicio = 0;
-    $telefono="";
+    $nombre = "";
+    $descripcion = "";
+    $telefono = "";
     $fecha = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND servicio.id=(SELECT id FROM servicio WHERE descripcion=?)";
+    $sentencia = "SELECT id_socio, id_servicio, nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND servicio.id=(SELECT id FROM servicio WHERE descripcion=?)";
 
     $consulta = $conexionBD->prepare($sentencia);
     $cadena = strtolower($nombreServicio);
 
     $consulta->bind_param("s", $cadena);
 
-    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fecha, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $nombre, $descripcion, $telefono, $fecha, $hora, $cancelada);
     $consulta->execute();
 
 
@@ -1137,21 +1149,26 @@ function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
     while ($consulta->fetch()) {
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
+        $boton = $cancelada
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+
         echo '
-        <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
-                    <p class="card-text">
-                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
-                        <strong>Teléfono:</strong> ' . $telefono . '<br>
-                        <strong>Hora:</strong> ' . $hora . '<br>
-                        ' . $estado . '
-                    </p>
-                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
-                </div>
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Socio: ' . $nombre . '</h5>
+                <p class="card-text">
+                    <strong>Servicio:</strong> ' . $descripcion . '<br>
+                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Hora:</strong> ' . $hora . '<br>
+                    ' . $estado . '
+                </p>
+                <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+                ' . $boton . '
             </div>
-        </div>';
+        </div>
+    </div>';
     }
 
     echo '</div>';
@@ -1169,18 +1186,20 @@ function listarCitasPorFecha($conexionBD, $fecha)
 
     $id_socio = 0;
     $id_servicio = 0;
+    $nombre = "";
+    $descripcion = "";
     $telefono = "";
     $fechaResultado = "";
     $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
+    $sentencia = "SELECT id_socio, id_servicio, nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
     $consulta = $conexionBD->prepare($sentencia);
 
     $consulta->bind_param("s", $fecha);
 
-    $consulta->bind_result($id_socio, $id_servicio, $telefono, $fechaResultado, $hora, $cancelada);
+    $consulta->bind_result($id_socio, $id_servicio, $nombre, $descripcion, $telefono, $fechaResultado, $hora, $cancelada);
 
     $consulta->execute();
 
@@ -1193,21 +1212,26 @@ function listarCitasPorFecha($conexionBD, $fecha)
     while ($consulta->fetch()) {
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
+        $boton = $cancelada
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+
         echo '
-        <div class="col">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Socio: ' . $id_socio . '</h5>
-                    <p class="card-text">
-                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
-                        <strong>Teléfono:</strong> ' . $telefono . '<br>
-                        <strong>Hora:</strong> ' . $hora . '<br>
-                        ' . $estado . '
-                    </p>
-                    <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
-                </div>
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Socio: ' . $nombre . '</h5>
+                <p class="card-text">
+                    <strong>Servicio:</strong> ' . $descripcion . '<br>
+                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Hora:</strong> ' . $hora . '<br>
+                    ' . $estado . '
+                </p>
+                <p class="text-muted"><small>Fecha: ' . $fechaResultado . '</small></p>
+                ' . $boton . '
             </div>
-        </div>';
+        </div>
+    </div>';
     }
 
     echo '</div>';
@@ -1218,6 +1242,69 @@ function listarCitasPorFecha($conexionBD, $fecha)
 
     echo '</div>';
 
+}
+
+function listarCitasPorId($conexionBD, $socio, $servicio)
+{
+
+    $nombre = "";
+    $descripcion = "";
+    $telefono = "";
+    $fecha = "";
+    $hora = "";
+    $cancelada = 0;
+
+
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora,cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE id=?) AND servicio.id=(SELECT id FROM servicio WHERE id=?)";
+
+    $consulta = $conexionBD->prepare($sentencia);
+
+
+    $consulta->bind_param("ii", $socio, $servicio);
+
+    $consulta->bind_result($nombre, $descripcion, $telefono, $fecha, $hora, $cancelada);
+    $consulta->execute();
+
+
+    echo '<div class="container my-5">';
+    echo '<h2 class="text-center mb-4">Cita Cancelada</h2>';
+    echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
+
+    $hayCitas = false;
+
+    while ($consulta->fetch()) {
+        $hayCitas = true;
+        echo '
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Socio: ' . $nombre . '</h5>
+                <p class="card-text">
+                    <strong>Servicio:</strong> ' . $descripcion . '<br>
+                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Hora:</strong> ' . $hora . '<br>
+                </p>
+                <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
+            </div>  
+        </div>
+    </div>';
+    }
+
+    echo '</div>';
+
+    if (!$hayCitas) {
+        echo '<div class="alert alert-info text-center">No existe esta cita.</div>';
+    }
+
+    echo '</div>';
+
+    if ($cancelada===0) {
+        cancelarCita($conexionBD, $socio, $servicio); // Función que cancela la cita
+    }else{
+        borrarCita( $conexionBD, $socio, $servicio); // Función que cancela la cita
+    }
+
+    var_dump($cancelada);
 }
 ?>
 
