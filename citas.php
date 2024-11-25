@@ -42,74 +42,113 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 </div>
                 <div class="col-md-6">
                     <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha"
-                        placeholder="Fecha">
+                    <input type="date" class="form-control" id="fecha" name="fecha" placeholder="Fecha">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
                 </div>
             </form>
         </section>
-    
 
-    <!-- Listado -->
+
+        <!-- Listado -->
         <section>
-        <?php
+            <?php
 
-        //Si no se manda nada por formulario sale el calendario.
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            calendario($conexion);
-        }
+            //Si no se manda nada por formulario sale el calendario.
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                calendario($conexion);
+            }
 
-        if (isset($_POST['buscar'])) {
+            if (isset($_POST['buscar'])) {
 
-            $nombreSocio = $_POST['socio'];
-            $nombreServicio = $_POST['servicio'];
-            $fecha= $_POST['fecha'];
+                $nombreSocio = $_POST['socio'];
+                $nombreServicio = $_POST['servicio'];
+                $fecha = $_POST['fecha'];
 
-            echo '<section class="mb-5">
+                
+
+                if (!empty($nombreSocio)) {
+
+                    listarCitasPorNombreSocio($conexion, $nombreSocio);
+
+                }
+
+                if (!empty($nombreServicio)) {
+
+                    listarCitasPorNombreServicio($conexion, $nombreServicio);
+                }
+
+                if (!empty($fecha)) {
+
+                    listarCitasPorFecha($conexion, $fecha);
+                }
+
+                if (empty($nombreSocio) && empty($nombreServicio) && empty($fecha)) {
+                    echo '<div class="alert alert-warning">Escribe un algun nombre de socio, de servicio o alguna fecha.';
+                }
+
+                echo '<section class="mb-5">
             <form method="POST">
                 <button type="submit" name="mostrar" class="btn btn-secondary">Mostrar Calendario</button>
             </form>
         </section>';
-
-            if (!empty($nombreSocio)) {
-
-                listarCitasPorNombreSocio($conexion, $nombreSocio);
-
             }
 
-            if (!empty($nombreServicio)) {
-
-                listarCitasPorNombreServicio($conexion, $nombreServicio);
+            if (isset($_POST['mostrar'])) {
+                calendario($conexion);
             }
 
-            if (!empty($fecha)) {
+            if (isset($_POST["insertar"])) {
+                $socio = $_POST["socio"];
+                $servicio = $_POST["servicio"];
+                $fecha = $_POST["fecha"];
+                $hora = $_POST["hora"];
+                insertarNuevaCita($conexion, $socio, $servicio, $fecha, $hora);
 
-                listarCitasPorFecha($conexion, $fecha);
+                echo '<section class="mb-5">
+            <form method="POST">
+                <button type="submit" name="mostrar" class="btn btn-secondary">Mostrar Calendario</button>
+            </form>
+        </section>';
             }
 
-            if (empty($nombreSocio) && empty($nombreServicio) && empty($fecha)) {
-                echo '<div class="alert alert-warning">Escribe un algun nombre de socio, de servicio o alguna fecha.';
-            }
-        }
+            ?>
+        </section>
 
-        if (isset($_POST['mostrar'])) {
-            calendario($conexion);
-        }
-
-        if (isset($_POST['cancelar'])) {
-            $nombre = $_POST['nombre'];
-            
-            $rutaFoto = guardarImagenes('foto');
-
-            insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
-
-        }
-
-        ?>
-    </section>
-</div>
+        <section class="mb-5">
+            <h4>Insertar Nueva Cita</h4>
+            <form method="POST" class="row g-3">
+                <div class="col-md-6">
+                    <label for="socio" class="form-label">Socio</label>
+                    <select class="form-control" id="socio" name="socio" required>
+                        <?php
+                        listarNombreDeSocios($conexion)
+                            ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="servicio" class="form-label">Servicio</label>
+                    <select class="form-control" id="servicio" name="servicio" required>
+                        <?php
+                        listarNombreDeServicios($conexion)
+                            ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="hora" class="form-label">Hora</label>
+                    <input type="time" class="form-control" id="hora" name="hora" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" name="insertar" class="btn btn-success">Insertar</button>
+                </div>
+            </form>
+        </section>
+    </div>
     <?php
     footer();
     ?>

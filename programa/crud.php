@@ -48,8 +48,12 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
 function listarSocios($conexionBD)
 {
 
-    $consulta = "SELECT * FROM socio";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT * FROM socio";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
 
     if ($resultado->num_rows > 0) {
         echo '<div class="container my-5">';
@@ -57,7 +61,7 @@ function listarSocios($conexionBD)
 
         echo '<h4>Listado Completo de Socios</h4>';
 
-        while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
+        while ($fila = $resultado->fetch_assoc()) {
             $id = $fila["id"];
             $nombre = $fila["nombre"];
             $edad = $fila["edad"];
@@ -96,6 +100,28 @@ function listarSocios($conexionBD)
         echo '</div>';
     } else {
         echo '<p class="text-center text-muted">No hay socios registrados.</p>';
+    }
+}
+
+function listarNombreDeSocios($conexionBD)
+{
+
+    $sentencia = "SELECT id, nombre FROM socio";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
+
+    if ($resultado->num_rows > 0) {
+        echo '<option value="">Seleccione un socio</option>';
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $id = $fila["id"];
+            $nombre = $fila["nombre"];
+
+            echo '<option value="' . $id . '">' . $nombre . '</option>';
+        }
     }
 }
 
@@ -495,8 +521,12 @@ function listarServiciosPorNombre($conexionBD, $nombreServicio)
 
 function listarServicios($conexionBD)
 {
-    $consulta = "SELECT * FROM servicio ORDER BY precio";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT * FROM servicio ORDER BY precio";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
 
 
     echo '<div class="container my-5">';
@@ -534,6 +564,28 @@ function listarServicios($conexionBD)
 
     echo '</div>';
     echo '</div>';
+}
+
+function listarNombreDeServicios($conexionBD)
+{
+
+    $sentencia = "SELECT id, descripcion FROM servicio";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
+
+    if ($resultado->num_rows > 0) {
+        echo '<option value="">Seleccione un servicio</option>';
+
+        while ($fila = $resultado->fetch_assoc()) {
+            $id = $fila["id"];
+            $descripcion = $fila["descripcion"];
+
+            echo '<option value="' . $id . '">' . $descripcion . '</option>';
+        }
+    }
 }
 
 ?>
@@ -606,10 +658,14 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
 
 function listarTestimonios($conexionBD)
 {
-    $consulta = "SELECT * FROM testimonio ORDER BY fecha";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT * FROM testimonio ORDER BY fecha";
+    $consulta = $conexionBD->prepare($sentencia);
 
-    // Contenedor del acordeón
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
+
+    // Contenedor del acordeon
     echo '<div class="container my-5">';
     echo '<div class="accordion accordion-flush" id="accordionTestimonios">';
     echo '<h4>Listado de Testimonios</h4>';
@@ -652,8 +708,12 @@ function listarTestimonios($conexionBD)
 function listarTestimonioAleatorio($conexionBD)
 {
 
-    $consulta = "SELECT * FROM testimonio ORDER BY RAND() LIMIT 1";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT * FROM testimonio ORDER BY RAND() LIMIT 1";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
 
     if ($resultado->num_rows > 0) {
 
@@ -724,8 +784,12 @@ function numeroNoticias($conexionBD)
 {
 
 
-    $consulta = "SELECT COUNT(id) as Total FROM noticia";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT COUNT(id) as Total FROM noticia";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
 
     while ($fila = $resultado->fetch_array(MYSQLI_ASSOC)) {
         $total = (int) $fila["Total"];
@@ -794,8 +858,12 @@ function listarNoticias($conexionBD, $numero)
 function listarUltimasNoticias($conexionBD)
 {
 
-    $consulta = "SELECT * FROM noticia ORDER BY fecha DESC LIMIT 3";
-    $resultado = $conexionBD->query($consulta);
+    $sentencia = "SELECT * FROM noticia ORDER BY fecha DESC LIMIT 3";
+    $consulta = $conexionBD->prepare($sentencia);
+
+    $consulta->execute();
+
+    $resultado = $consulta->get_result();
 
 
     $contador = 0;
@@ -899,7 +967,6 @@ function verNoticiaIndividual($conexionBD, $id)
 
 function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
 {
-
     $sentencia = "INSERT INTO citas (id_socio, id_servicio, fecha, hora) VALUES (?, ?, ?, ?)";
     $consulta = $conexionBD->prepare($sentencia);
 
@@ -907,70 +974,86 @@ function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
 
     $consulta->execute();
 
-    if ($consulta->affected_rows > 0) {
-        echo "Se ha insertado la nueva cita.";
-    } else {
-        echo "No se ha insertado la nueva cita.";
-    }
-}
-
-function cancelarCita($conexionBD, $id_socio, $id_servicio)
-{
-    
-    $sentencia1 = "SELECT DAY(fecha) AS Dia FROM citas WHERE id_socio=? AND id_servicio=?";
-    $consulta1 = $conexionBD->prepare($sentencia1);
-    $consulta1->bind_param("ii", $id_socio, $id_servicio);
-    $consulta1->execute();
-
-    $resultado1 = $consulta1->get_result();  
-    if ($fila1 = $resultado1->fetch_assoc()) {
-        $fecha = (int) $fila1['Dia'];  
-    } else {
-        echo "No se encontró la cita.";
-        return;
-    }
-
-    
-    $diaHoy = (int) date("j");
-
-    
-    if ($diaHoy === $fecha) {
-        echo "No puedes anular la cita. Deberías haberlo hecho con un día de antelación.";
-    } else if ($diaHoy > $fecha) {
-        echo "No puedes anular una cita ya pasada.";
-    } else {
-        
-        $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND id_servicio=?";
-        $consulta2 = $conexionBD->prepare($sentencia2);
-        $consulta2->bind_param("ii", $id_socio, $id_servicio);
-        $consulta2->execute();
-
-        
-        if ($consulta2->affected_rows > 0) {
-            echo "Se ha cancelado la cita. Redirigiendo...";
+    try {
+        if ($consulta->affected_rows > 0) {
+            echo '
+        <div class="col mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Cita para el Socio: ' . $id_socio . '</h5>
+                    <p class="card-text">
+                        <strong>Servicio:</strong> ' . $id_servicio . '<br>
+                        <strong>Fecha:</strong> ' . $fecha . '<br>
+                        <strong>Hora:</strong> ' . $hora . '<br>
+                    </p>
+                </div>
+            </div>
+        </div>';
         } else {
-            echo "No se ha cancelado la cita.";
+            echo "No se pudo insertar la cita.";
         }
+
+    } catch (mysqli_sql_exception $e) {
+        echo 'No se pudo insertar la cita. Posiblemente ya exista una igual';
     }
 }
 
-function borrarCita($conexionBD, $id_socio, $id_servicio)
+
+function gestionCita($conexionBD, $id_socio, $id_servicio,$condicion)
 {
+        if ($condicion === "b") {
+            // Si la cita no está cancelada, podemos cancelarla
+            $sentencia1 = "SELECT DAY(fecha) AS Dia FROM citas WHERE id_socio=? AND id_servicio=?";
+            $consulta1 = $conexionBD->prepare($sentencia1);
+            $consulta1->bind_param("ii", $id_socio, $id_servicio);
+            $consulta1->execute();
+            $resultado1 = $consulta1->get_result();
 
+            if ($fila1 = $resultado1->fetch_assoc()) {
+                $fecha = (int) $fila1['Dia'];  // Obtenemos el día de la cita
+            } else {
+                echo "No se encontró la cita.";
+                return;
+            }
 
-    $sentencia = "DELETE FROM citas WHERE id_socio=? AND id_servicio=? AND cancelada=1";
-    $consulta = $conexionBD->prepare($sentencia);
+            $diaHoy = (int) date("j");
 
-    $consulta->bind_param("ii", $id_socio, $id_servicio);
+            if ($diaHoy === $fecha) {
+                echo "No puedes anular la cita. Deberías haberlo hecho con un día de antelación.";
+            } else if ($diaHoy > $fecha) {
+                echo "No puedes anular una cita ya pasada.";
+            } else {
+                // Cancelar la cita
+                $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND id_servicio=?";
+                $consulta2 = $conexionBD->prepare($sentencia2);
+                $consulta2->bind_param("ii", $id_socio, $id_servicio);
+                $consulta2->execute();
 
-    $consulta->execute();
+                if ($consulta2->affected_rows > 0) {
+                    echo "Se ha cancelado la cita. Redirigiendo...";
+                header("Refresh:3; url=citas.php");
+                } else {
+                    echo "No se ha cancelado la cita.";
+                }
+            }
 
-    if ($consulta->affected_rows > 0) {
-        echo "Se ha borrado la cita.";
-    } else {
-        echo "No se ha borrado la nueva cita posiblemente no exista o no este cancelada.";
-    }
+        } else if ($condicion === "a") {
+            // Si ya está cancelada, se procede a borrar la cita
+            $sentencia = "DELETE FROM citas WHERE id_socio=? AND id_servicio=? AND cancelada=1";
+            $consulta = $conexionBD->prepare($sentencia);
+            $consulta->bind_param("ii", $id_socio, $id_servicio);
+            $consulta->execute();
+
+            if ($consulta->affected_rows > 0) {
+                echo "Se ha borrado la cita. Redirigiendo...";
+            header("Refresh:3; url=citas.php");
+            } else {
+                echo "No se ha borrado la cita. Posiblemente no exista o no esté cancelada.";
+            }
+        }
 }
+
+
 
 
 function numeroCitas($conexionBD, $fecha)
@@ -1005,6 +1088,7 @@ function listarCitas($conexionBD, $fecha)
     $cancelada = 0;
 
 
+
     $sentencia = "SELECT id_socio, id_servicio, nombre, descripcion, telefono, fecha, hora, cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND fecha=?";
     $consulta = $conexionBD->prepare($sentencia);
 
@@ -1024,8 +1108,8 @@ function listarCitas($conexionBD, $fecha)
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
         $boton = $cancelada
-            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
-            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=a" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=b" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
 
         echo '
     <div class="col">
@@ -1086,8 +1170,8 @@ function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
         $boton = $cancelada
-            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
-            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio .'&condicion=a" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio .'&condicion=b" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
 
         echo '
     <div class="col">
@@ -1150,8 +1234,8 @@ function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
         $boton = $cancelada
-            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
-            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=a" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=b" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
 
         echo '
     <div class="col">
@@ -1213,8 +1297,8 @@ function listarCitasPorFecha($conexionBD, $fecha)
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
         $boton = $cancelada
-            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
-            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=a" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=b" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
 
         echo '
     <div class="col">
@@ -1244,7 +1328,7 @@ function listarCitasPorFecha($conexionBD, $fecha)
 
 }
 
-function listarCitasPorId($conexionBD, $socio, $servicio)
+function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
 {
 
     $nombre = "";
@@ -1272,6 +1356,7 @@ function listarCitasPorId($conexionBD, $socio, $servicio)
 
     $hayCitas = false;
 
+    
     while ($consulta->fetch()) {
         $hayCitas = true;
         echo '
@@ -1298,13 +1383,10 @@ function listarCitasPorId($conexionBD, $socio, $servicio)
 
     echo '</div>';
 
-    if ($cancelada===0) {
-        cancelarCita($conexionBD, $socio, $servicio); // Función que cancela la cita
-    }else{
-        borrarCita( $conexionBD, $socio, $servicio); // Función que cancela la cita
-    }
+    gestionCita($conexionBD, $socio, $servicio, $condicion);
 
-    var_dump($cancelada);
+    
+
 }
 ?>
 
