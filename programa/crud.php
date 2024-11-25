@@ -1525,7 +1525,7 @@ function calendario($conexion)
             // Dia actual
             // Mostrar icono si hay citas
             if ($citas > 0) {
-                echo '<td class="position-relative bg-primary text-white fw-bold">
+                echo '<td class="dias position-relative bg-primary text-white fw-bold ">
                 <a href="ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-white text-decoration-none d-block h-100">
                     ' . $dia . '
                     <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
@@ -1535,12 +1535,12 @@ function calendario($conexion)
                 </a>
               </td>';
             } else {
-                echo '<td class="position-relative bg-primary text-white fw-bold">' . $dia . '</td>';
+                echo '<td class="dias position-relative bg-primary text-white fw-bold">' . $dia . '</td>';
             }
         } else {
             // Otros dias
             if ($citas > 0) {
-                echo '<td class="position-relative">
+                echo '<td class="dias position-relative">
                 <a href="ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-black text-decoration-none d-block h-100">
                     ' . $dia . '
                     <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
@@ -1550,7 +1550,7 @@ function calendario($conexion)
                 </a>
               </td>';
             } else {
-                echo '<td class="position-relative">' . $dia . '</td>';
+                echo '<td class="dias position-relative">' . $dia . '</td>';
             }
         }
     }

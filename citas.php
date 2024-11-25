@@ -117,36 +117,39 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         </section>
 
         <section class="mb-5">
-            <h4>Insertar Nueva Cita</h4>
-            <form method="POST" class="row g-3">
-                <div class="col-md-6">
-                    <label for="socio" class="form-label">Socio</label>
-                    <select class="form-control" id="socio" name="socio" required>
-                        <?php
-                        listarNombreDeSocios($conexion)
-                            ?>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="servicio" class="form-label">Servicio</label>
-                    <select class="form-control" id="servicio" name="servicio" required>
-                        <?php
-                        listarNombreDeServicios($conexion)
-                            ?>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="hora" class="form-label">Hora</label>
-                    <input type="time" class="form-control" id="hora" name="hora" required>
-                </div>
-                <div class="col-12">
-                    <button type="submit" name="insertar" class="btn btn-success">Insertar</button>
-                </div>
-            </form>
+           <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Insertar Nueva Cita
+    </button>
+    <div class="dropdown-menu p-4" aria-labelledby="dropdownMenuButton" style="min-width: 300px;">
+        <form method="POST" class="row g-3">
+            <div class="col-md-12">
+                <label for="socio" class="form-label">Socio</label>
+                <select class="form-control" id="socio" name="socio" required>
+                    <?php listarNombreDeSocios($conexion); ?>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label for="servicio" class="form-label">Servicio</label>
+                <select class="form-control" id="servicio" name="servicio" required>
+                    <?php listarNombreDeServicios($conexion); ?>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label for="fecha" class="form-label">Fecha</label>
+                <input type="date" class="form-control" id="fecha" name="fecha" required>
+            </div>
+            <div class="col-md-12">
+                <label for="hora" class="form-label">Hora</label>
+                <input type="time" class="form-control" id="hora" name="hora" required>
+            </div>
+            <div class="col-12">
+                <button type="submit" name="insertar" class="btn btn-success w-100">Insertar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
         </section>
     </div>
     <?php
