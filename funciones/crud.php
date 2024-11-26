@@ -926,8 +926,8 @@ function listarUltimasNoticias($conexionBD)
                 <img src="imagenesNoticias/' . $imagen . '" class="card-img-top" alt="' . $titulo . '" style="width: 100%; height: auto; max-height: 200px;">
                 <div class="card-body">
                     <h5 class="card-title">' . $titulo . '</h5>
-                    <p class="card-text">' . $contenido_resumido . '...</p> <!-- Muestra las primeras 3 palabras del contenido -->
-                    <a href="ver_noticia.php?id=' . $id . '" class="btn btn-primary">Leer mas</a> <!-- Boton para leer la noticia completa -->
+                    <p class="card-text">' . $contenido_resumido . '...</p>
+                    <a href="php/modificar_ver/ver_noticia.php?id=' . $id . '" class="btn btn-primary">Leer mas</a> 
                 </div>
                 <div class="card-footer text-muted">
                     <small>Publicado el ' . date('d M Y', strtotime($fecha)) . '</small>
@@ -959,11 +959,13 @@ function verNoticiaIndividual($conexionBD, $id)
     $resultado->execute();
 
 
+    //getenv('HTTP_REFERER') Sirve para volver a la pagina anterior tomando http como referencia asi no ahi conflicto entre el volver del index y del verNoticias
+
     while ($resultado->fetch()) {
         echo '
         <div class="container my-5">
-        <div>
-                <a href="../noticias.php" class="btn btn-secondary mt-3">Volver</a>
+        <div>   
+                <a href="'.getenv('HTTP_REFERER').'" class="btn btn-secondary mt-3">Volver</a>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-9">
