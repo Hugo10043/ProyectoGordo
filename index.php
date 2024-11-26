@@ -31,7 +31,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <div class="row align-items-center">
 
             <div class="col-md-6 mb-4">
-                <img src="imagenes/gimnasio.jpg" alt="Gimnasio Kalimuscle" class="img-fluid rounded shadow">
+                <img src="imagenesGenerales/gimnasio.jpg" alt="Gimnasio Kalimuscle" class="img-fluid rounded shadow">
             </div>
 
             <div class="col-md-6">

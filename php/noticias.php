@@ -42,7 +42,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             $titulo = $_POST['titulo'];
             $contenido = $_POST['contenido'];
             $fecha = $_POST['fecha'];
-            $rutaImagen = guardarImagenes('imagen');
+            $rutaImagen = guardarImagenesNoticias('imagen');
 
             insertarNuevaNoticia($conexion, $titulo, $contenido, $rutaImagen, $fecha);
 

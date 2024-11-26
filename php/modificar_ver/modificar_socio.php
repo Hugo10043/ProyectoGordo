@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $usuario = $_POST["usuario"];
     $contraseña = $_POST["contraseña"];
     $telefono = $_POST["telefono"];
-    $rutaFotoNueva = guardarImagenesMod('foto');
+    $rutaFotoNueva = guardarImagenesModSocios('foto');
 
     if (!$rutaFotoNueva) {
         // Si no se sube ninguna imagen mantenemos la  actual

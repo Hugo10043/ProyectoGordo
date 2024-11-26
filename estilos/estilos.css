@@ -85,6 +85,10 @@
     border-radius: 50%;
 }
 
+.table{
+    min-width: 200px;
+}
+
 .table img {
     width: 20px;
     height: 20px;

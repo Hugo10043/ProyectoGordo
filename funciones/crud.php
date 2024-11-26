@@ -27,7 +27,7 @@ function insertarNuevoSocio($conexionBD, $nombre, $edad, $usuario, $contraseña,
                                 <h5 class="card-title">' . $nombre . ' (' . $edad . ' años)</h5>
                                 <p class="card-text">
                                     <strong>Usuario:</strong> ' . $usuario . '<br>
-                                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                                    <strong>Telefono:</strong> ' . $telefono . '<br>
                                     <strong>Contraseña:</strong> ' . $contraseña . '
                                   
                                 </p>
@@ -83,7 +83,7 @@ function listarSocios($conexionBD)
                                 <h5 class="card-title">' . $nombre . ' (' . $edad . ' años)</h5>
                                 <p class="card-text">
                                     <strong>Usuario:</strong> ' . $usuario . '<br>
-                                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                                    <strong>Telefono:</strong> ' . $telefono . '<br>
                                     <strong>Contraseña:</strong> ' . $contraseña . '
                                     
                                 </p>
@@ -188,7 +188,7 @@ function listarSocioPorId($conexionBD, $id)
                     
                 </div>
                 <div class="mb-3">
-                    <label for="telefono" class="form-label">Teléfono</label>
+                    <label for="telefono" class="form-label">Telefono</label>
                     <input type="text" class="form-control" id="telefono" name="telefono" value="' . $telefono . '" required>
                 </div>
                 <div class="mb-3">
@@ -253,7 +253,7 @@ function listarSociosPorNombre($conexionBD, $nombreSocio)
                                 <h5 class="card-title">' . $nombre . ' (' . $edad . ' años)</h5>
                                 <p class="card-text">
                                     <strong>Usuario:</strong> ' . $usuario . '<br>
-                                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                                    <strong>Telefono:</strong> ' . $telefono . '<br>
                                     <strong>Contraseña:</strong> ' . $contraseña . '
                                 </p>
                                 <a href="modificar_ver/modificar_socio.php?id=' . $id . '" class="btn btn-warning">Modificar</a>
@@ -319,7 +319,7 @@ function listarSociosPorTelefono($conexionBD, $telefonoSocio)
                                 <h5 class="card-title">' . $nombre . ' (' . $edad . ' años)</h5>
                                 <p class="card-text">
                                     <strong>Usuario:</strong> ' . $usuario . '<br>
-                                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                                    <strong>Telefono:</strong> ' . $telefono . '<br>
                                     <strong>Contraseña:</strong> ' . $contraseña . '
                                 </p>
                                 <a href="modificar_ver/modificar_socio.php?id=' . $id . '" class="btn btn-warning">Modificar</a>
@@ -395,8 +395,8 @@ function insertarNuevoServicio($conexionBD, $descripcion, $duracion, $precio)
                         </h2>
                         <div id="collapseNuevo" class="accordion-collapse collapse" aria-labelledby="headingNuevo" data-bs-parent="#accordionServicioInsertado">
                             <div class="accordion-body">
-                                <p><strong>Descripción:</strong> ' . $descripcion . '</p>
-                                <p><strong>Duración:</strong> ' . $duracion . 'm</p>
+                                <p><strong>Descripcion:</strong> ' . $descripcion . '</p>
+                                <p><strong>Duracion:</strong> ' . $duracion . 'm</p>
                                 <p><strong>Precio:</strong> ' . $precio . '€</p>
                                 <div class="text-end">
                                 </div>
@@ -519,8 +519,8 @@ function listarServiciosPorNombre($conexionBD, $nombreServicio)
             </h2>
             <div id="collapse' . $contador . '" class="accordion-collapse collapse" aria-labelledby="heading' . $contador . '" data-bs-parent="#accordionServiciosFiltrados">
                 <div class="accordion-body">
-                    <p><strong>Descripción:</strong> ' . $descripcion . '</p>
-                    <p><strong>Duración:</strong> ' . $duracion . 'm</p>
+                    <p><strong>Descripcion:</strong> ' . $descripcion . '</p>
+                    <p><strong>Duracion:</strong> ' . $duracion . 'm</p>
                     <p><strong>Precio:</strong> ' . $precio . '€</p>
                     <div class="text-end">
                         <p><a href="modificar_ver/modificar_servicio.php?id=' . $id . '" class="btn btn-warning">Modificar</a></p>
@@ -572,8 +572,8 @@ function listarServicios($conexionBD)
             </h2>
             <div id="collapse' . $contador . '" class="accordion-collapse collapse" aria-labelledby="heading' . $contador . '" data-bs-parent="#accordionServicios">
                 <div class="accordion-body">
-                    <p><strong>Descripción:</strong> ' . $descripcion . '</p>
-                    <p><strong>Duración:</strong> ' . $duracion . 'm</p>
+                    <p><strong>Descripcion:</strong> ' . $descripcion . '</p>
+                    <p><strong>Duracion:</strong> ' . $duracion . 'm</p>
                     <p><strong>Precio:</strong> ' . $precio . '€</p>
                     <div class="text-end">
                         <a href="modificar_ver/modificar_servicio.php?id=' . $id . '" class="btn btn-warning">Modificar</a>
@@ -791,7 +791,7 @@ function insertarNuevaNoticia($conexionBD, $titulo, $contenido, $imagen, $fecha)
                     <div class="card-body">
                         <h5 class="card-title">' . $titulo . '</h5>
                         <p class="card-text">' . $contenidoLimitado . '</p>
-                        <p class="text-muted"><small>Fecha de publicación: ' . $fecha . '</small></p>
+                        <p class="text-muted"><small>Fecha de publicacion: ' . $fecha . '</small></p>
                     </div>';
             echo '</div>';
             echo '</div><br>';
@@ -849,7 +849,7 @@ function listarNoticias($conexionBD, $numero)
                         <h5 class="card-title">' . $titulo . '</h5>
                         <p class="card-text">' . $contenidoLimitado . '</p>
                         <p><a href="modificar_ver/ver_noticia.php?id=' . $id . '" class="btn btn-warning">Ver completa</a></p>
-                        <p class="text-muted"><small>Fecha de publicación: ' . $fecha . '</small></p>
+                        <p class="text-muted"><small>Fecha de publicacion: ' . $fecha . '</small></p>
                     </div>
                 </div>
             </div>';
@@ -923,11 +923,11 @@ function listarUltimasNoticias($conexionBD)
         echo '
         <div class="' . $alineacion . '">
             <div class="card">
-                <img src="imagenes/' . $imagen . '" class="card-img-top" alt="' . $titulo . '" style="width: 100%; height: auto; max-height: 200px;">
+                <img src="imagenesNoticias/' . $imagen . '" class="card-img-top" alt="' . $titulo . '" style="width: 100%; height: auto; max-height: 200px;">
                 <div class="card-body">
                     <h5 class="card-title">' . $titulo . '</h5>
                     <p class="card-text">' . $contenido_resumido . '...</p> <!-- Muestra las primeras 3 palabras del contenido -->
-                    <a href="ver_noticia.php?id=' . $id . '" class="btn btn-primary">Leer más</a> <!-- Botón para leer la noticia completa -->
+                    <a href="ver_noticia.php?id=' . $id . '" class="btn btn-primary">Leer mas</a> <!-- Boton para leer la noticia completa -->
                 </div>
                 <div class="card-footer text-muted">
                     <small>Publicado el ' . date('d M Y', strtotime($fecha)) . '</small>
@@ -1040,7 +1040,7 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
         if ($fila1 = $resultado1->fetch_assoc()) {
             $fecha = $fila1['fecha'];
         } else {
-            echo "No se encontró la cita.";
+            echo "No se encontro la cita.";
             return;
         }
 
@@ -1053,7 +1053,7 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
 
 
         if ($fechaActual === $fecha) {
-            echo "No puedes anular la cita. Deberías haberlo hecho con un día de antelación.";
+            echo "No puedes anular la cita. Deberias haberlo hecho con un dia de antelacion.";
         } else if ($fechaActual > $fecha) {
             echo "No puedes anular una cita ya pasada.";
         } else {
@@ -1082,7 +1082,7 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
             echo "Se ha borrado la cita. Redirigiendo...";
             header("Refresh:3; url=../citas.php");
         } else {
-            echo "No se ha borrado la cita. Posiblemente no exista o no esté cancelada.";
+            echo "No se ha borrado la cita. Posiblemente no exista o no este cancelada.";
         }
     }
 }
@@ -1133,7 +1133,7 @@ function listarCitas($conexionBD, $fecha)
     $consulta->execute();
 
     echo '<div class="container my-5">';
-    echo '<h2 class="text-center mb-4">Citas del día ' . $fecha . '</h2>';
+    echo '<h2 class="text-center mb-4">Citas del dia ' . $fecha . '</h2>';
     echo '<p> <a href="../citas.php" class="btn btn-secondary mt-3">Volver</a> </p>';
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
@@ -1153,7 +1153,7 @@ function listarCitas($conexionBD, $fecha)
                 <h5 class="card-title">Socio: ' . $nombre . '</h5>
                 <p class="card-text">
                     <strong>Servicio:</strong> ' . $descripcion . '<br>
-                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Telefono:</strong> ' . $telefono . '<br>
                     <strong>Hora:</strong> ' . $hora . '<br>
                     ' . $estado . '
                 </p>
@@ -1215,7 +1215,7 @@ function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
                 <h5 class="card-title">Socio: ' . $nombre . '</h5>
                 <p class="card-text">
                     <strong>Servicio:</strong> ' . $descripcion . '<br>
-                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Telefono:</strong> ' . $telefono . '<br>
                     <strong>Hora:</strong> ' . $hora . '<br>
                     ' . $estado . '
                 </p>
@@ -1279,7 +1279,7 @@ function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
                 <h5 class="card-title">Socio: ' . $nombre . '</h5>
                 <p class="card-text">
                     <strong>Servicio:</strong> ' . $descripcion . '<br>
-                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Telefono:</strong> ' . $telefono . '<br>
                     <strong>Hora:</strong> ' . $hora . '<br>
                     ' . $estado . '
                 </p>
@@ -1342,7 +1342,7 @@ function listarCitasPorFecha($conexionBD, $fecha)
                 <h5 class="card-title">Socio: ' . $nombre . '</h5>
                 <p class="card-text">
                     <strong>Servicio:</strong> ' . $descripcion . '<br>
-                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Telefono:</strong> ' . $telefono . '<br>
                     <strong>Hora:</strong> ' . $hora . '<br>
                     ' . $estado . '
                 </p>
@@ -1401,7 +1401,7 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
                 <h5 class="card-title">Socio: ' . $nombre . '</h5>
                 <p class="card-text">
                     <strong>Servicio:</strong> ' . $descripcion . '<br>
-                    <strong>Teléfono:</strong> ' . $telefono . '<br>
+                    <strong>Telefono:</strong> ' . $telefono . '<br>
                     <strong>Hora:</strong> ' . $hora . '<br>
                 </p>
                 <p class="text-muted"><small>Fecha: ' . $fecha . '</small></p>
@@ -1427,10 +1427,24 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
 
 
 <?php
-function guardarImagenes($foto)
+function guardarImagenesSocios($foto)
 {
 
-    $directorioDestino = '../imagenes/';
+    $directorioDestino = '../imagenesSocios/';
+    $nombreArchivo = $_FILES[$foto]['name'];
+    $rutaCompleta = $directorioDestino . $nombreArchivo;
+
+
+    // Mover el archivo a la carpeta de destino
+    if (move_uploaded_file($_FILES[$foto]['tmp_name'], $rutaCompleta)) {
+        return $rutaCompleta;
+    }
+}
+
+function guardarImagenesNoticias($foto)
+{
+
+    $directorioDestino = '../imagenesNoticias/';
     $nombreArchivo = $_FILES[$foto]['name'];
     $rutaCompleta = $directorioDestino . $nombreArchivo;
 
@@ -1442,10 +1456,10 @@ function guardarImagenes($foto)
 }
 
 
-function guardarImagenesMod($foto)
+function guardarImagenesModSocios($foto)
 {
 
-    $directorioDestino = '../imagenes/';
+    $directorioDestino = '../imagenesSocios/';
     $nombreArchivo = $_FILES[$foto]['name'];
     $rutaCompleta = $directorioDestino . $nombreArchivo;
 
@@ -1511,7 +1525,7 @@ function calendario($conexion)
     $primerDia = date("N", strtotime("$año-$mes-01"));
 
 
-    $nombresDias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    $nombresDias = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
 
     $nombresMeses = [
         1 => "Enero",
@@ -1528,11 +1542,10 @@ function calendario($conexion)
         12 => "Diciembre"
     ];
 
-    //Fecha actual
+    // Fecha actual
     $diaActual = date("j");
     $mesActual = date("n");
     $añoActual = date("Y");
-
 
     // Generar calendario
     echo '<div class="container my-5">';
@@ -1544,8 +1557,8 @@ function calendario($conexion)
     echo '<a href="?mes=' . $mesSiguiente . '&anio=' . $añoSiguiente . '" class="btn btn-primary">Mes Siguiente &raquo;</a>';
     echo '</div>';
 
-    echo '<table class="table table-bordered text-center">';
-
+    echo '<div class="table-responsive">';
+    echo '<table class="table table-bordered text-center align-middle">';
 
     echo '<thead><tr>';
     foreach ($nombresDias as $dia) {
@@ -1554,63 +1567,56 @@ function calendario($conexion)
     echo '</tr></thead>';
     echo '<tbody><tr>';
 
-    // Espacios vacíos antes
+    // Espacios vacios antes
     for ($i = 1; $i < $primerDia; $i++) {
         echo '<td></td>';
     }
 
     // Generar los dias
     for ($dia = 1; $dia <= $dias; $dia++) {
-
-        //Le paso un formato y los valores a sprintf para que me devuelva la fecha asi "2024-05-02" por ejemplo
+        // Fecha completa
         $fechaCompleta = sprintf("%04d-%02d-%02d", $año, $mes, $dia);
-
         $citas = numeroCitas($conexion, $fechaCompleta);
 
+        // Nueva fila para la semana
         if (($primerDia + $dia - 2) % 7 === 0) {
             echo '</tr><tr>';
         }
 
         // Resaltar dia actual
         if ($dia == $diaActual && $mes == $mesActual && $año == $añoActual) {
-
-            // Dia actual
-            // Mostrar icono si hay citas
             if ($citas > 0) {
-                echo '<td class="dias position-relative bg-primary text-white fw-bold ">
+                echo '<td class="dias position-relative bg-primary text-white fw-bold p-3">
                 <a href="modificar_ver/ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-white text-decoration-none d-block h-100">
                     ' . $dia . '
                     <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
                         <span class="badge bg-warning">' . $citas . '</span>
-                        <img src="../imagenes/icono.png" alt="Cita">
+                        <img src="../imagenesGenerales/icono.png" alt="Cita" style="width: 20px; height: 20px;">
                     </div>
                 </a>
               </td>';
             } else {
-                echo '<td class="dias position-relative bg-primary text-white fw-bold">' . $dia . '</td>';
+                echo '<td class="dias bg-primary text-white fw-bold p-3">' . $dia . '</td>';
             }
         } else {
             // Otros dias
             if ($citas > 0) {
-                echo '<td class="dias position-relative">
+                echo '<td class="dias position-relative p-3">
                 <a href="modificar_ver/ver_cita.php?fecha=' . $fechaCompleta . '" class="stretched-link text-black text-decoration-none d-block h-100">
                     ' . $dia . '
                     <div class="position-absolute top-0 end-0 m-1 d-flex align-items-center">
                         <span class="badge bg-warning">' . $citas . '</span>
-                        <img src="../imagenes/icono.png" alt="Cita">
+                        <img src="../imagenesGenerales/icono.png" alt="Cita" style="width: 20px; height: 20px;">
                     </div>
                 </a>
               </td>';
             } else {
-                echo '<td class="dias position-relative">' . $dia . '</td>';
+                echo '<td class="dias p-3">' . $dia . '</td>';
             }
         }
     }
 
-
-
-
-    //Calcular los espacios del final
+    // Calcular los espacios del final
     $ultimoDiaDeLaSemana = ($primerDia + $dias - 1) % 7;
 
     // Agregar los espacios
@@ -1620,12 +1626,12 @@ function calendario($conexion)
         }
     }
 
-
     echo '</tr></tbody>';
     echo '</table>';
     echo '</div>';
-
+    echo '</div>';
 }
+
 ?>
 
 <?php
@@ -1635,7 +1641,7 @@ function navIndex()
     echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.php">
-            <img src="imagenes/icono.png" alt="Logo" class="logo me-2">
+            <img src="imagenesGenerales/icono.png" alt="Logo" class="logo me-2">
             <span class="fw-bold">KaliMuscle</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -1671,7 +1677,7 @@ function nav()
     echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="../index.php">
-            <img src="../imagenes/icono.png" alt="Logo" class="logo me-2">
+            <img src="../imagenesGenerales/icono.png" alt="Logo" class="logo me-2">
             <span class="fw-bold">KaliMuscle</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -1707,7 +1713,7 @@ function navMod()
     echo '<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="../../index.php">
-            <img src="../../imagenes/icono.png" alt="Logo" class="logo me-2">
+            <img src="../../imagenesGenerales/icono.png" alt="Logo" class="logo me-2">
             <span class="fw-bold">KaliMuscle</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"

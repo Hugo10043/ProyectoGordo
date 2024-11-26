@@ -92,7 +92,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 $usuario = $_POST['usuario'];
                 $contraseña = $_POST['contraseña'];
                 $telefono = $_POST['telefono'];
-                $rutaFoto = guardarImagenes('foto');
+                $rutaFoto = guardarImagenesSocios('foto');
 
                 insertarNuevoSocio($conexion, $nombre, $edad, $usuario, $contraseña, $telefono, $rutaFoto);
 
