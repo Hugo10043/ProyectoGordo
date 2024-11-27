@@ -94,15 +94,15 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <form method="POST" class="row g-3">
                 <div class="col-md-6">
                     <label for="descripcion" class="form-label">Descripcion</label>
-                    <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion">
                 </div>
                 <div class="col-md-6">
                     <label for="duracion" class="form-label">Duracion</label>
-                    <input type="number" class="form-control" id="duracion" name="duracion" required>
+                    <input type="number" class="form-control" id="duracion" name="duracion">
                 </div>
                 <div class="col-md-6">
                     <label for="precio" class="form-label">Precio</label>
-                    <input type="number" class="form-control" id="precio" name="precio" required>
+                    <input type="number" class="form-control" id="precio" name="precio">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="insertar" class="btn btn-success">Insertar</button>

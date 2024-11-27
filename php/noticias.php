@@ -60,19 +60,19 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <form method="POST" class="row g-3" enctype="multipart/form-data">
                 <div class="col-md-6">
                     <label for="titulo" class="form-label">Titulo</label>
-                    <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    <input type="text" class="form-control" id="titulo" name="titulo">
                 </div>
                 <div class="col-md-6">
                     <label for="contenido" class="form-label">Contenido</label>
-                    <input type="text" class="form-control" id="contenido" name="contenido" required>
+                    <input type="text" class="form-control" id="contenido" name="contenido">
                 </div>
                 <div class="col-md-6">
                     <label for="imagen" class="form-label">Imagen</label>
-                    <input type="file" class="form-control" id="imagen" name="imagen" required>
+                    <input type="file" class="form-control" id="imagen" name="imagen">
                 </div>
                 <div class="col-md-6">
                     <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    <input type="date" class="form-control" id="fecha" name="fecha">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="insertar" class="btn btn-success">Insertar</button>

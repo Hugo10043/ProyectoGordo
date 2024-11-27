@@ -125,23 +125,23 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <form method="POST" class="row g-3">
             <div class="col-md-12">
                 <label for="socio" class="form-label">Socio</label>
-                <select class="form-control" id="socio" name="socio" required>
+                <select class="form-control" id="socio" name="socio">
                     <?php listarNombreDeSociosCitas($conexion); ?>
                 </select>
             </div>
             <div class="col-md-12">
                 <label for="servicio" class="form-label">Servicio</label>
-                <select class="form-control" id="servicio" name="servicio" required>
+                <select class="form-control" id="servicio" name="servicio">
                     <?php listarNombreDeServicios($conexion); ?>
                 </select>
             </div>
             <div class="col-md-12">
                 <label for="fecha" class="form-label">Fecha</label>
-                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                <input type="date" class="form-control" id="fecha" name="fecha">
             </div>
             <div class="col-md-12">
                 <label for="hora" class="form-label">Hora</label>
-                <input type="time" class="form-control" id="hora" name="hora" required>
+                <input type="time" class="form-control" id="hora" name="hora">
             </div>
             <div class="col-12">
                 <button type="submit" name="insertar" class="btn btn-success w-100">Insertar</button>

@@ -58,17 +58,17 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <form method="POST" class="row g-3">
                 <div class="col-md-6">
                     <label for="autor" class="form-label">Autor</label>
-                    <select class="form-control" id="autor" name="autor" required>
+                    <select class="form-control" id="autor" name="autor">
                         <?php listarNombreDeSociosTestimonios($conexion); ?>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label for="contenido" class="form-label">Contenido</label>
-                    <input type="text" class="form-control" id="contenido" name="contenido" required>
+                    <input type="text" class="form-control" id="contenido" name="contenido">
                 </div>
                 <div class="col-md-6">
                     <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    <input type="date" class="form-control" id="fecha" name="fecha">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="insertar" class="btn btn-success">Insertar</button>

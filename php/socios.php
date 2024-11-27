@@ -112,23 +112,23 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <form method="POST" class="row g-3" enctype="multipart/form-data">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre">
                 </div>
                 <div class="col-md-6">
                     <label for="edad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="edad" name="edad" required>
+                    <input type="number" class="form-control" id="edad" name="edad">
                 </div>
                 <div class="col-md-6">
                     <label for="usuario" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" id="usuario" name="usuario" required>
+                    <input type="text" class="form-control" id="usuario" name="usuario">
                 </div>
                 <div class="col-md-6">
                     <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="contraseña" name="contraseña" required>
+                    <input type="password" class="form-control" id="contraseña" name="contraseña">
                 </div>
                 <div class="col-md-6">
                     <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    <input type="text" class="form-control" id="telefono" name="telefono">
                 </div>
                 <div class="col-md-6">
                     <label for="foto" class="form-label">Foto (URL)</label>

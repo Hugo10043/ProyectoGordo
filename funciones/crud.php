@@ -172,24 +172,24 @@ function listarSocioPorId($conexionBD, $id)
             <form method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="' . $nombre . '" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="' . $nombre . '">
                 </div>
                 <div class="mb-3">
                     <label for="edad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="edad" name="edad" value="' . $edad . '" required>
+                    <input type="number" class="form-control" id="edad" name="edad" value="' . $edad . '">
                 </div>
                 <div class="mb-3">
                     <label for="usuario" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" id="usuario" name="usuario" value="' . $usuario . '" required>
+                    <input type="text" class="form-control" id="usuario" name="usuario" value="' . $usuario . '">
                 </div>
                 <div class="mb-3">
                     <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="text" class="form-control" id="contraseña" name="contraseña" value="' . $contraseña . '" required>
+                    <input type="text" class="form-control" id="contraseña" name="contraseña" value="' . $contraseña . '">
                     
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Telefono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" value="' . $telefono . '" required>
+                    <input type="text" class="form-control" id="telefono" name="telefono" value="' . $telefono . '">
                 </div>
                 <div class="mb-3">
                     <label for="foto" class="form-label">Foto</label>
@@ -341,14 +341,14 @@ function listarSociosPorTelefono($conexionBD, $telefonoSocio)
 function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contraseña, $telefono, $foto)
 {
 
-    $nombreSocio = strtolower($nombre);
+    
 
 
     $sentencia = "UPDATE socio SET nombre = ?, edad = ?, usuario = ?, password = ?, telefono = ?, foto = ? WHERE id = ?";
     $consulta = $conexionBD->prepare($sentencia);
 
 
-    $consulta->bind_param("sissssi", $nombreSocio, $edad, $usuario, $contraseña, $telefono, $foto, $idSocio);
+    $consulta->bind_param("sissssi", $nombre, $edad, $usuario, $contraseña, $telefono, $foto, $idSocio);
 
 
     $consulta->execute();
@@ -416,14 +416,12 @@ function insertarNuevoServicio($conexionBD, $descripcion, $duracion, $precio)
 function modificarServicio($conexionBD, $idServicio, $descripcion, $duracion, $precio)
 {
 
-    $nombreServicio = strtolower($descripcion);
-
 
     $sentencia = "UPDATE servicio SET descripcion = ?, duracion = ?, precio = ? WHERE id = ?";
     $consulta = $conexionBD->prepare($sentencia);
 
 
-    $consulta->bind_param("siii", $nombreServicio, $duracion, $precio, $idServicio);
+    $consulta->bind_param("siii", $descripcion, $duracion, $precio, $idServicio);
 
 
     $consulta->execute();
@@ -460,15 +458,15 @@ function listarServicioPorId($conexionBD, $id)
             <form method="POST">
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripcion</label>
-                    <input type="text" class="form-control" id="descripcion" name="descripcion" value="' . $descripcion . '" required>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" value="' . $descripcion . '">
                 </div>
                 <div class="mb-3">
                     <label for="duracion" class="form-label">Duracion</label>
-                    <input type="number" class="form-control" id="duracion" name="duracion" value="' . $duracion . '" required>
+                    <input type="number" class="form-control" id="duracion" name="duracion" value="' . $duracion . '">
                 </div>
                 <div class="mb-3">
                     <label for="precio" class="form-label">Precio</label>
-                    <input type="number" class="form-control" id="precio" name="precio" value="' . $precio . '" required>
+                    <input type="number" class="form-control" id="precio" name="precio" value="' . $precio . '">
                 </div>
                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </form>
@@ -965,7 +963,7 @@ function verNoticiaIndividual($conexionBD, $id)
         echo '
         <div class="container my-5">
         <div>   
-                <a href="'.getenv('HTTP_REFERER').'" class="btn btn-secondary mt-3">Volver</a>
+                <p><a href="'.getenv('HTTP_REFERER').'" class="btn btn-secondary mt-3">Volver</a></p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-9">
@@ -973,7 +971,7 @@ function verNoticiaIndividual($conexionBD, $id)
                         <div class="card-body">
                             <h1 class="card-title">' . $titulo . '</h1>
                             
-                            <img src="../' . $imagen . '" class="img-fluid rounded float-start me-3" alt="Imagen de ' . $titulo . '" style="max-width: 250px; height: auto; object-fit: cover;">
+                            <img src="../' . $imagen . '" class="img-fluid rounded float-start me-3" alt="Imagen de ' . $titulo . '" style="max-width: 320px;min-width: 320px; height: auto; object-fit: cover;">
                             
                             <p class="card-text">
                                 ' . $contenido . '
@@ -1388,7 +1386,12 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
 
 
     echo '<div class="container my-5">';
-    echo '<h2 class="text-center mb-4">Cita Cancelada</h2>';
+    if($condicion==="b"){
+        echo '<h2 class="text-center mb-4">Cita Cancelada</h2>';
+    }else if ($condicion === "a"){
+        echo '<h2 class="text-center mb-4">Cita Borrada</h2>';
+    }
+    
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
     $hayCitas = false;
