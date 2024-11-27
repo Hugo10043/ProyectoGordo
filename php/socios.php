@@ -17,6 +17,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <link rel="stylesheet" href="../estilos/estilos.css">
+    <script defer src="../javaScript/validacionSocios.js"></script>
 </head>
 
 <body>
@@ -33,11 +34,11 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <form method="POST" class="row g-3">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del socio">
+                    <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Nombre del socio">
                 </div>
                 <div class="col-md-6">
                     <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono"
+                    <input type="text" class="form-control" id="telefonoSocio" name="telefonoSocio"
                         placeholder="Teléfono del socio">
                 </div>
                 <div class="col-12">
@@ -57,8 +58,8 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 
             if (isset($_POST['buscar'])) {
 
-                $nombreBuscado = $_POST['nombre'];
-                $telefonoBuscado = $_POST['telefono'];
+                $nombreBuscado = $_POST['nombreSocio'];
+                $telefonoBuscado = $_POST['telefonoSocio'];
 
                 echo '<section class="mb-5">
             <form method="POST">
@@ -109,30 +110,36 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <!-- Formulario para insertar un nuevo socio -->
         <section class="mb-5">
             <h4>Insertar Nuevo Socio</h4>
-            <form method="POST" class="row g-3" enctype="multipart/form-data">
+            <form method="POST" class="row g-3" enctype="multipart/form-data" id="form">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre">
+                    <span class="error"></span>
                 </div>
                 <div class="col-md-6">
                     <label for="edad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="edad" name="edad">
+                    <input type="text" class="form-control" id="edad" name="edad">
+                    <span class="error"></span>
                 </div>
                 <div class="col-md-6">
                     <label for="usuario" class="form-label">Usuario</label>
                     <input type="text" class="form-control" id="usuario" name="usuario">
+                    <span class="error"></span>
                 </div>
                 <div class="col-md-6">
                     <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="contraseña" name="contraseña">
+                    <input type="text" class="form-control" id="contraseña" name="contraseña">
+                    <span class="error"></span>
                 </div>
                 <div class="col-md-6">
                     <label for="telefono" class="form-label">Teléfono</label>
                     <input type="text" class="form-control" id="telefono" name="telefono">
+                    <span class="error"></span>
                 </div>
                 <div class="col-md-6">
                     <label for="foto" class="form-label">Foto (URL)</label>
                     <input type="file" class="form-control" id="foto" name="foto">
+                    <span class="error"></span>
                 </div>
                 <div class="col-12">
                     <button type="submit" name="insertar" class="btn btn-success">Insertar</button>

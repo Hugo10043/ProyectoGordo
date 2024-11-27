@@ -105,3 +105,14 @@
     background-color:#6fa3f7;
     color: white;
 }
+
+.error {
+    display: none;
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.error::before {
+    content: "⚠️ ";
+}
