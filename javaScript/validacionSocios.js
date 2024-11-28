@@ -107,7 +107,7 @@ const validarEdad = () => {
 
     if (parseInt(valor) < 18) {
         span_error.style.display = "inline";
-        span_error.innerText = "La edad no puede ser menos a 18.";
+        span_error.innerText = "La edad no puede ser menor que 18.";
         return false;
     }
 
