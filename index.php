@@ -37,22 +37,22 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             <div class="col-md-6">
                 <h2 class="fw-bold text-primary">Bienvenido a Kalimuscle</h2>
                 <p class="fs-5 text-muted">
-                    En <strong>Kalimuscle</strong>, te ayudamos a alcanzar tus metas físicas y mejorar tu bienestar
-                    con instalaciones de última generación, entrenadores altamente capacitados y un ambiente motivador.
-                    Ya sea que estés comenzando tu viaje fitness o que seas un atleta experimentado, tenemos todo lo que
+                    En <strong>Kalimuscle</strong>, te ayudamos a alcanzar tus metas fisicas y mejorar tu bienestar
+                    con instalaciones de ultima generacion, entrenadores altamente capacitados y un ambiente motivador.
+                    Ya sea que estes comenzando tu viaje fitness o que seas un atleta experimentado, tenemos todo lo que
                     necesitas.
                 </p>
                 <p class="fs-5 text-muted">
-                    Únete a nuestra comunidad de deportistas apasionados y descubre por qué <strong>Kalimuscle</strong>
+                    Unete a nuestra comunidad de deportistas apasionados y descubre por que <strong>Kalimuscle</strong>
                     es el lugar perfecto para entrenar, crecer y triunfar.
                 </p>
-                <a href="#" class="btn btn-primary px-4 py-2">Contáctanos</a>
+                <a href="#" class="btn btn-primary px-4 py-2">Contactanos</a>
             </div>
         </div>
     </section>
 
     <section class="container my-5">
-        <h2>Últimas Noticias</h2>
+        <h2>Ultimas Noticias</h2>
         <?php
         listarUltimasNoticias($conexion);
         ?>

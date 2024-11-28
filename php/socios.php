@@ -26,7 +26,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
     nav();
     ?>
     <div class="container my-5">
-        <h2 class="text-center mb-4">Gestión de Socios</h2>
+        <h2 class="text-center mb-4">Gestion de Socios</h2>
 
         <!-- Formulario de busqueda -->
         <section class="mb-5">
@@ -37,9 +37,9 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                     <input type="text" class="form-control" id="nombreSocio" name="nombreSocio" placeholder="Nombre del socio">
                 </div>
                 <div class="col-md-6">
-                    <label for="telefono" class="form-label">Teléfono</label>
+                    <label for="telefono" class="form-label">Telefono</label>
                     <input type="text" class="form-control" id="telefonoSocio" name="telefonoSocio"
-                        placeholder="Teléfono del socio">
+                        placeholder="Telefono del socio">
                 </div>
                 <div class="col-12">
                     <button type="submit" name="buscar" class="btn btn-primary">Buscar</button>
@@ -132,12 +132,12 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                     <span class="error"></span>
                 </div>
                 <div class="col-md-6">
-                    <label for="telefono" class="form-label">Teléfono</label>
+                    <label for="telefono" class="form-label">Telefono</label>
                     <input type="text" class="form-control" id="telefono" name="telefono">
                     <span class="error"></span>
                 </div>
                 <div class="col-md-6">
-                    <label for="foto" class="form-label">Foto (URL)</label>
+                    <label for="foto" class="form-label">Foto</label>
                     <input type="file" class="form-control" id="foto" name="foto">
                     <span class="error"></span>
                 </div>

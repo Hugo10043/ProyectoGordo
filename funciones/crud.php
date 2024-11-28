@@ -341,7 +341,7 @@ function listarSociosPorTelefono($conexionBD, $telefonoSocio)
 function modificarSocio($conexionBD, $idSocio, $nombre, $edad, $usuario, $contraseña, $telefono, $foto)
 {
 
-    
+
 
 
     $sentencia = "UPDATE socio SET nombre = ?, edad = ?, usuario = ?, password = ?, telefono = ?, foto = ? WHERE id = ?";
@@ -617,9 +617,12 @@ function listarNombreDeServicios($conexionBD)
 
 <?php
 
-function insertarNuevoTestimonio($conexionBD, $autor, $contenido, $fecha)
+function insertarNuevoTestimonio($conexionBD, $autor, $contenido)
 {
-    $sentencia = "INSERT INTO testimonio (autor, contenido, fecha) VALUES (?, ?, ?)";
+
+    $fecha = date("Y-m-d");
+
+    $sentencia = "INSERT INTO testimonio (autor, contenido, fecha) VALUES (?, ?,?)";
     $consulta = $conexionBD->prepare($sentencia);
 
     $consulta->bind_param("sss", $autor, $contenido, $fecha);
@@ -963,7 +966,7 @@ function verNoticiaIndividual($conexionBD, $id)
         echo '
         <div class="container my-5">
         <div>   
-                <p><a href="'.getenv('HTTP_REFERER').'" class="btn btn-secondary mt-3">Volver</a></p>
+                <p><a href="' . getenv('HTTP_REFERER') . '" class="btn btn-secondary mt-3">Volver</a></p>
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-9">
@@ -1386,12 +1389,12 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
 
 
     echo '<div class="container my-5">';
-    if($condicion==="b"){
+    if ($condicion === "b") {
         echo '<h2 class="text-center mb-4">Cita Cancelada</h2>';
-    }else if ($condicion === "a"){
+    } else if ($condicion === "a") {
         echo '<h2 class="text-center mb-4">Cita Borrada</h2>';
     }
-    
+
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
     $hayCitas = false;
