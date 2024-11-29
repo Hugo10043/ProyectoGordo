@@ -86,7 +86,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
                 }
 
                 if (empty($nombreSocio) && empty($nombreServicio) && empty($fecha)) {
-                    echo '<div class="alert alert-warning">Escribe un algun nombre de socio, de servicio o alguna fecha.';
+                    echo '<div class="alert alert-warning">Escribe un algun nombre de socio, de servicio o alguna fecha.</div>';
                 }
 
                 echo '<section class="mb-5">

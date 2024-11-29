@@ -659,14 +659,7 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido)
         }
     } catch (mysqli_sql_exception $e) {
         echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto.</div></div>';
-        echo '
-            <div class="col-12 text-center mt-4">
-                <section class="mb-5">
-                    <form method="POST">
-                        <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Testimonios</button>
-                    </form>
-                </section>
-            </div>';
+        
     }
 }
 
@@ -1025,7 +1018,7 @@ function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
         }
 
     } catch (mysqli_sql_exception $e) {
-        echo 'No se pudo insertar la cita. Posiblemente ya exista una igual';
+        echo '<div class="container my-5"><div class="alert alert-danger">No se pudo insertar la cita. Posiblemente ya exista una igual.</div></div>';
     }
 }
 
