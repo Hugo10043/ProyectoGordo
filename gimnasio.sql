@@ -117,16 +117,16 @@ CREATE TABLE `socio` (
 --
 
 INSERT INTO `socio` (`id`, `nombre`, `edad`, `usuario`, `password`, `telefono`, `foto`) VALUES
-(1, 'Juan Perez', 30, 'juanp', '12345', '+34986093478', '../imagenesSocios/juan.jpg'),
-(2, 'Ana Lopez', 28, 'analo', '67890', '+34968440176', '../imagenesSocios/ana.jpg'),
-(3, 'Luis Torres', 35, 'luist', 'abcde', '+34967018564', '../imagenesSocios/luis.jpg'),
-(4, 'Maria Gomez', 25, 'mariag', 'vwxyz', '+34548925491', '../imagenesSocios/maria.jpg'),
-(5, 'Carlos Ruiz', 40, 'carlr', 'qwert', '+34986036548', '../imagenesSocios/carlos.jpg'),
-(6, 'Lucia Martinez', 32, 'luciam', 'asdfg', '+34918017531', '../imagenesSocios/lucia.jpg'),
-(7, 'Pedro Silva', 29, 'pedros', 'zxcvb', '+34689854101', '../imagenesSocios/pedro.jpg'),
-(8, 'Elena Vega', 26, 'elenav', 'poiuy', '+34984108456', '../imagenesSocios/elena.jpg'),
-(9, 'Andres Flores', 33, 'andresf', 'lkjhg', '+34987160165', '../imagenesSocios/andres.jpg'),
-(10, 'Sofia Nuñez', 27, 'sofian', 'mnbvc', '+34890718564', '../imagenesSocios/sofia.jpg');
+(1, 'Juan Perez', 30, 'juanp', '12345789', '+34986093478', '../imagenesSocios/juan.jpg'),
+(2, 'Ana Lopez', 28, 'analo', '678903453', '+34968440176', '../imagenesSocios/ana.jpg'),
+(3, 'Luis Torres', 35, 'luist', 'abcderth', '+34967018564', '../imagenesSocios/luis.jpg'),
+(4, 'Maria Gomez', 25, 'mariag', 'vwxyzrhr', '+34548925491', '../imagenesSocios/maria.jpg'),
+(5, 'Carlos Ruiz', 40, 'carlr', 'qwertegeg', '+34986036548', '../imagenesSocios/carlos.jpg'),
+(6, 'Lucia Martinez', 32, 'luciam', 'asdfgffff', '+34918017531', '../imagenesSocios/lucia.jpg'),
+(7, 'Pedro Silva', 29, 'pedros', 'zxcvb45rd', '+34689854101', '../imagenesSocios/pedro.jpg'),
+(8, 'Elena Vega', 26, 'elenav', '345rtyjrtg', '+34984108456', '../imagenesSocios/elena.jpg'),
+(9, 'Andres Flores', 33, 'andresf', 'lkjhg5446', '+34987160165', '../imagenesSocios/andres.jpg'),
+(10, 'Sofia Nuñez', 27, 'sofian', 'mnbvc6612', '+34890718564', '../imagenesSocios/sofia.jpg');
 
 -- --------------------------------------------------------
 
@@ -235,3 +235,7 @@ ALTER TABLE `citas`
   ADD CONSTRAINT `cita_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id`),
   ADD CONSTRAINT `cita_socio` FOREIGN KEY (`id_socio`) REFERENCES `socio` (`id`);
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
