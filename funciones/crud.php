@@ -683,7 +683,6 @@ function listarTestimonios($conexionBD)
 
 
     if ($consulta->affected_rows > 0) {
-        // Contenedor del acordeon
         echo '<div class="container my-5">';
         echo '<div class="accordion accordion-flush" id="accordionTestimonios">';
         echo '<h4>Listado de Testimonios</h4>';
@@ -788,7 +787,7 @@ function insertarNuevaNoticia($conexionBD, $titulo, $contenido, $imagen, $fecha)
             echo '<div class="row gy-4">';
             echo '<h4>Socio Insertado</h4>';
             echo '<div class="card mx-auto" style="width: 50%;">
-                    <img src="' . $imagen . '" class="card-img-top" alt="Imagen de ' . $titulo . '" style="height: 300px; object-fit: contain;">
+                    <img src="' . $imagen . '" class="card-img-top" alt="Imagen de ' . $titulo . '>
                     <div class="card-body">
                         <h5 class="card-title">' . $titulo . '</h5>
                         <p class="card-text">' . $contenidoLimitado . '</p>
@@ -832,6 +831,7 @@ function listarNoticias($conexionBD, $numero)
         echo '<div class="carousel-inner">';
 
         $activa = true; // La primera es la activa
+
         while ($fila = $resultado->fetch_assoc()) {
             $id = $fila['id'];
             $titulo = $fila['titulo'];
@@ -870,7 +870,7 @@ function listarNoticias($conexionBD, $numero)
             <span class="visually-hidden">Siguiente</span>
         </button>';
 
-        echo '</div>'; // Cierra el carrusel
+        echo '</div>';
     } else {
         echo '<p class="text-center text-muted">No hay noticias disponibles.</p>';
     }

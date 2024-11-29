@@ -29,7 +29,8 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <h2 class="text-center mb-4">Gestion de Noticias</h2>
 
         <?php
-        
+
+        //Si no se manda nada por formulario sale el carrusel.
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             
             carrusel($conexion);

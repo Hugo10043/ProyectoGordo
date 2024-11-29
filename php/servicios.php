@@ -47,6 +47,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <section>
             <?php
 
+            //Si no se manda nada por formulario salen todos los servicios.
             if ($_SERVER["REQUEST_METHOD"] !== "POST") {
                 listarServicios($conexion);
             }

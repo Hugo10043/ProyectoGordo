@@ -28,6 +28,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
         <h2 class="text-center mb-4">Gestion de Testimonios</h2>
         <?php
 
+        //Si no se manda nada por formulario salen todos los testimonios.
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             listarTestimonios($conexion);
         }

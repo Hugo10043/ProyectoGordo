@@ -1,21 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 26-11-2024 a las 13:05:19
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de datos: `gimnasio`
@@ -45,11 +30,12 @@ INSERT INTO `citas` (`id_socio`, `id_servicio`, `fecha`, `hora`, `cancelada`) VA
 (3, 1, '2024-11-27', '15:00:00', 0),
 (4, 4, '2024-11-28', '09:00:00', 0),
 (5, 2, '2024-11-29', '14:00:00', 1),
+(5, 3, '2024-11-30', '10:22:58', 0),
 (6, 3, '2024-11-30', '16:30:00', 0),
 (7, 1, '2024-12-01', '08:00:00', 0),
 (8, 4, '2024-12-02', '12:30:00', 1),
-(9, 2, '2024-12-03', '13:00:00', 0),
-(10, 3, '2024-12-04', '17:00:00', 1);
+(9, 2, '2024-11-30', '00:00:00', 0),
+(9, 2, '2024-12-03', '13:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -99,16 +85,16 @@ CREATE TABLE `servicio` (
 --
 
 INSERT INTO `servicio` (`id`, `descripcion`, `duracion`, `precio`) VALUES
-(1, 'Yoga', 60, 500),
-(2, 'Crossfit', 45, 700),
-(3, 'Piscina', 30, 300),
-(4, 'Zumba', 50, 400),
-(5, 'Spinning', 60, 600),
-(6, 'Kickboxing', 45, 800),
-(7, 'Pilates', 60, 500),
-(8, 'Nutrición', 30, 1000),
-(9, 'Entrenador Personal', 60, 1500),
-(10, 'Sauna', 20, 200);
+(1, 'Yoga', 60, 50),
+(2, 'Crossfit', 45, 65),
+(3, 'Piscina', 30, 35),
+(4, 'Zumba', 50, 20),
+(5, 'Spinning', 60, 45),
+(6, 'Kickboxing', 45, 20),
+(7, 'Pilates', 60, 50),
+(8, 'Nutrición', 30, 60),
+(9, 'Entrenador Personal', 60, 100),
+(10, 'Sauna', 20, 25);
 
 -- --------------------------------------------------------
 
@@ -131,7 +117,7 @@ CREATE TABLE `socio` (
 --
 
 INSERT INTO `socio` (`id`, `nombre`, `edad`, `usuario`, `password`, `telefono`, `foto`) VALUES
-(1, 'juan perez', 30, 'juanp', '12345', '+34986093478', '../imagenesSocios/juan.jpg'),
+(1, 'Juan Perez', 30, 'juanp', '12345', '+34986093478', '../imagenesSocios/juan.jpg'),
 (2, 'Ana Lopez', 28, 'analo', '67890', '+34968440176', '../imagenesSocios/ana.jpg'),
 (3, 'Luis Torres', 35, 'luist', 'abcde', '+34967018564', '../imagenesSocios/luis.jpg'),
 (4, 'Maria Gomez', 25, 'mariag', 'vwxyz', '+34548925491', '../imagenesSocios/maria.jpg'),
@@ -179,7 +165,8 @@ INSERT INTO `testimonio` (`id`, `autor`, `contenido`, `fecha`) VALUES
 -- Indices de la tabla `citas`
 --
 ALTER TABLE `citas`
-  ADD UNIQUE KEY `id_socio` (`id_socio`,`fecha`,`hora`);
+  ADD UNIQUE KEY `id_socio` (`id_socio`,`fecha`,`hora`),
+  ADD KEY `cita_servicio` (`id_servicio`);
 
 --
 -- Indices de la tabla `noticia`
@@ -245,9 +232,6 @@ ALTER TABLE `testimonio`
 -- Filtros para la tabla `citas`
 --
 ALTER TABLE `citas`
+  ADD CONSTRAINT `cita_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id`),
   ADD CONSTRAINT `cita_socio` FOREIGN KEY (`id_socio`) REFERENCES `socio` (`id`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
