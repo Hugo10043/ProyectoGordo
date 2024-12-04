@@ -8,6 +8,8 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
 // Obtener el ID del socio
 $idSocio = $_GET["id_socio"];
 $idServicio = $_GET["id_servicio"];
+$hora= $_GET["hora"];
+$dia = $_GET["fecha"];
 $condicion= $_GET["condicion"];
 ?>
 
@@ -30,7 +32,7 @@ $condicion= $_GET["condicion"];
     ?>
     
     <?php
-    listarCitasPorId($conexion, $idSocio,$idServicio,$condicion);
+    listarCitasPorId($conexion, $idSocio,$idServicio,$hora,$dia,$condicion);
 
     ?>
     

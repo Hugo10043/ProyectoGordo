@@ -659,7 +659,7 @@ function insertarNuevoTestimonio($conexionBD, $autor, $contenido)
         }
     } catch (mysqli_sql_exception $e) {
         echo '<div class="container my-5"><div class="alert alert-danger">No puedes insertar otro testimonio con el mismo texto.</div></div>';
-        
+
     }
 }
 
@@ -777,9 +777,11 @@ function insertarNuevaNoticia($conexionBD, $titulo, $contenido, $imagen, $fecha)
             $contenidoLimitado = implode(' ', array_slice(explode(' ', $contenido), 0, 3)) . '...';
 
             echo '<div class="container my-5">';
+
             echo '<div class="row gy-4">';
-            echo '<h4>Socio Insertado</h4>';
-            echo '<div class="card mx-auto" style="width: 50%;">
+            echo '<h4 class="col-12 text-center mb-4">Noticia Insertada</h4>';
+            echo '
+            <div class="card mx-auto" style="width: 50%;">
                     <img src="' . $imagen . '" class="card-img-top" alt="Imagen de ' . $titulo . '>
                     <div class="card-body">
                         <h5 class="card-title">' . $titulo . '</h5>
@@ -1023,13 +1025,17 @@ function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
 }
 
 
-function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
+function gestionCita($conexionBD, $id_socio, $id_servicio, $hora, $dia, $condicion)
 {
+
+    $canceladaBien=true;
+    $borradaBien=true;
+
     if ($condicion === "b") {
         // Comprobamos si se puede cancelar la cita
-        $sentencia1 = "SELECT fecha FROM citas WHERE id_socio=? AND id_servicio=?";
+        $sentencia1 = "SELECT fecha FROM citas WHERE id_socio=? AND id_servicio=? AND hora=? AND fecha=?";
         $consulta1 = $conexionBD->prepare($sentencia1);
-        $consulta1->bind_param("ii", $id_socio, $id_servicio);
+        $consulta1->bind_param("iiss", $id_socio, $id_servicio, $hora, $dia);
         $consulta1->execute();
         $resultado1 = $consulta1->get_result();
 
@@ -1047,11 +1053,12 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
         $fechaActual = sprintf("%04d-%02d-%02d", $añoActual, $mesActual, $diaActual);
 
 
-
         if ($fechaActual === $fecha) {
             echo "No puedes anular la cita. Deberias haberlo hecho con un dia de antelacion.";
+            $canceladaBien = false;
         } else if ($fechaActual > $fecha) {
             echo "No puedes anular una cita ya pasada.";
+            $canceladaBien = false;
         } else {
             // Cancelar la cita
             $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND id_servicio=?";
@@ -1079,6 +1086,7 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $condicion)
             header("Refresh:3; url=../citas.php");
         } else {
             echo "No se ha borrado la cita. Posiblemente no exista o no este cancelada.";
+            $borradaBien = false;
         }
     }
 }
@@ -1139,8 +1147,8 @@ function listarCitas($conexionBD, $fecha)
         $estado = $cancelada ? '<span class="badge bg-danger">Cancelada</span>' : '<span class="badge bg-success">Activa</span>';
         $hayCitas = true;
         $boton = $cancelada
-            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=a" class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
-            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=b" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
+            ? '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=a&hora=' . $hora . '&fecha=' . $fechaResultado . '"  class="btn btn-danger btn-sm mt-2">Borrar Cita</a>'
+            : '<a href="gestion_cita.php?id_socio=' . $id_socio . '&id_servicio=' . $id_servicio . '&condicion=b&hora=' . $hora . '&fecha=' . $fechaResultado . '"" class="btn btn-warning btn-sm mt-2">Cancelar Cita</a>';
 
         echo '
     <div class="col">
@@ -1192,7 +1200,7 @@ function listarCitasPorNombreSocio($conexionBD, $nombreSocio)
 
 
     echo '<div class="container my-5">';
-    echo '<h2 class="text-center mb-4">Busqueda de citas por servicios </h2>';
+    echo '<h2 class="text-center mb-4">Busqueda de citas por socio </h2>';
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
     $hayCitas = false;
@@ -1256,7 +1264,7 @@ function listarCitasPorNombreServicio($conexionBD, $nombreServicio)
 
 
     echo '<div class="container my-5">';
-    echo '<h2 class="text-center mb-4">Busqueda de citas por socios </h2>';
+    echo '<h2 class="text-center mb-4">Busqueda de citas por servicios </h2>';
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
     $hayCitas = false;
@@ -1359,23 +1367,22 @@ function listarCitasPorFecha($conexionBD, $fecha)
 
 }
 
-function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
+function listarCitasPorId($conexionBD, $socio, $servicio, $hora, $dia, $condicion)
 {
 
     $nombre = "";
     $descripcion = "";
     $telefono = "";
     $fecha = "";
-    $hora = "";
     $cancelada = 0;
 
 
-    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora,cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE id=?) AND servicio.id=(SELECT id FROM servicio WHERE id=?)";
+    $sentencia = "SELECT nombre, descripcion, telefono, fecha, hora,cancelada FROM citas,socio,servicio WHERE id_socio=socio.id AND id_servicio=servicio.id AND socio.id=(SELECT id FROM socio WHERE id=?) AND servicio.id=(SELECT id FROM servicio WHERE id=?) AND hora=? AND fecha=?";
 
     $consulta = $conexionBD->prepare($sentencia);
 
 
-    $consulta->bind_param("ii", $socio, $servicio);
+    $consulta->bind_param("iiss", $socio, $servicio, $hora, $dia);
 
     $consulta->bind_result($nombre, $descripcion, $telefono, $fecha, $hora, $cancelada);
     $consulta->execute();
@@ -1419,7 +1426,7 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $condicion)
 
     echo '</div>';
 
-    gestionCita($conexionBD, $socio, $servicio, $condicion);
+    gestionCita($conexionBD, $socio, $servicio, $hora, $dia,$condicion);
 
 
 

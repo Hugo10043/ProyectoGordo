@@ -51,7 +51,7 @@ $conexion = conectar($nombre_host, $nombre_usuario, $password_db, $nombre_db);
             echo'<section class="mb-5">
             <section class="mb-5">
             <form method="POST">
-                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todos los Servicios</button>
+                <button type="submit" name="mostrar_todos" class="btn btn-secondary">Mostrar Todas las Noticias</button>
             </form>
         </section>';
 
