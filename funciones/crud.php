@@ -1028,9 +1028,6 @@ function insertarNuevaCita($conexionBD, $id_socio, $id_servicio, $fecha, $hora)
 function gestionCita($conexionBD, $id_socio, $id_servicio, $hora, $dia, $condicion)
 {
 
-    $canceladaBien=true;
-    $borradaBien=true;
-
     if ($condicion === "b") {
         // Comprobamos si se puede cancelar la cita
         $sentencia1 = "SELECT fecha FROM citas WHERE id_socio=? AND id_servicio=? AND hora=? AND fecha=?";
@@ -1054,11 +1051,11 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $hora, $dia, $condici
 
 
         if ($fechaActual === $fecha) {
-            echo "No puedes anular la cita. Deberias haberlo hecho con un dia de antelacion.";
-            $canceladaBien = false;
+            echo "No puedes cancelar la cita. Deberias haberlo hecho con un dia de antelacion. Redirigiendo...";
+            header("Refresh:3; url=../citas.php");
         } else if ($fechaActual > $fecha) {
-            echo "No puedes anular una cita ya pasada.";
-            $canceladaBien = false;
+            echo "No puedes cancelar una cita ya pasada. Redirigiendo...";
+            header("Refresh:3; url=../citas.php");
         } else {
             // Cancelar la cita
             $sentencia2 = "UPDATE citas SET cancelada = 1 WHERE id_socio=? AND id_servicio=?";
@@ -1070,7 +1067,8 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $hora, $dia, $condici
                 echo "Se ha cancelado la cita. Redirigiendo...";
                 header("Refresh:3; url=../citas.php");
             } else {
-                echo "No se ha cancelado la cita.";
+                echo "No se ha cancelado la cita. Redirigiendo...";
+                header("Refresh:3; url=../citas.php");
             }
         }
 
@@ -1085,8 +1083,8 @@ function gestionCita($conexionBD, $id_socio, $id_servicio, $hora, $dia, $condici
             echo "Se ha borrado la cita. Redirigiendo...";
             header("Refresh:3; url=../citas.php");
         } else {
-            echo "No se ha borrado la cita. Posiblemente no exista o no este cancelada.";
-            $borradaBien = false;
+            echo "No se ha borrado la cita. Posiblemente no exista o no este cancelada. Redirigiendo...";
+            header("Refresh:3; url=../citas.php");
         }
     }
 }
@@ -1138,7 +1136,7 @@ function listarCitas($conexionBD, $fecha)
 
     echo '<div class="container my-5">';
     echo '<h2 class="text-center mb-4">Citas del dia ' . $fecha . '</h2>';
-    echo '<p> <a href="../citas.php" class="btn btn-secondary mt-3">Volver</a> </p>';
+    echo '<p><a href="' . getenv('HTTP_REFERER') . '" class="btn btn-secondary mt-3">Volver</a></p>';
     echo '<div class="row row-cols-1 row-cols-md-2 g-4">';
 
     $hayCitas = false;
@@ -1425,10 +1423,6 @@ function listarCitasPorId($conexionBD, $socio, $servicio, $hora, $dia, $condicio
     }
 
     echo '</div>';
-
-    gestionCita($conexionBD, $socio, $servicio, $hora, $dia,$condicion);
-
-
 
 }
 ?>

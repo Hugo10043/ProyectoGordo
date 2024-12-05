@@ -33,7 +33,7 @@ $condicion= $_GET["condicion"];
     
     <?php
     listarCitasPorId($conexion, $idSocio,$idServicio,$hora,$dia,$condicion);
-
+    gestionCita($conexion, $idSocio, $idServicio, $hora, $dia, $condicion);
     ?>
     
     <?php
